@@ -454,6 +454,23 @@
             <button class="btn outline" id="btnPrevQ">Sebelumnya</button>
             <button class="btn blue" id="btnNextQ">Selanjutnya</button>
             <button class="btn success" id="btnFinishTest">Selesai & Kirim</button>
+            const resultData = {
+  email: email,
+  score: totalScore,
+  answers: state.answers
+};
+
+// simpan lokal
+state.results.push({
+  time: nowText(),
+  email,
+  score: totalScore,
+  summary: "Tersimpan"
+});
+saveAll();
+
+// kirim ke Google Sheets
+sendToSheet(resultData);
           </div>
         </div>
       </section>
@@ -1003,23 +1020,24 @@
       setView('home');
     }
 
-    async function trySendToSpreadsheet(record){
-      const endpoint = (state.settings.sheetEndpoint || '').trim();
-      if (!endpoint) return;
-      try {
-        await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            source: 'SMK PGRI 2 Kediri Psychological Test',
-            type: 'result',
-            record
-          })
-        });
-      } catch (err) {
-        console.warn('Gagal mengirim ke spreadsheet:', err);
+    async function sendToSheet(data) {
+  const url = state.settings.sheetEndpoint;
+  if (!url) return;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json"
       }
-    }
+    });
+
+    console.log("Berhasil kirim ke spreadsheet");
+  } catch (err) {
+    console.error("Gagal kirim:", err);
+  }
+}
 
     function editQuestion(id){
       if (state.admin?.role !== 'superadmin') return;

@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Aplikasi Tes Psikologi Internal - SMK PGRI 2 Kediri</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --surface:#ffffff;
+      --surface-2:#f8fafc;
+      --text:#0f172a;
+      --muted:#64748b;
+      --primary:#0f3a66;
+      --primary-2:#1d4ed8;
+      --accent:#0ea5e9;
+      --danger:#dc2626;
+      --success:#16a34a;
+      --border:#dbe3ee;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --radius:18px;
+      --radius-sm:12px;
+      --gap:16px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#eef4ff 0%, #f7fafc 35%, #f4f7fb 100%);
+      color:var(--text);
+    }
+
+    a{color:var(--primary-2); text-decoration:none}
+    button,input,textarea,select{font:inherit}
+
+    .app{
+      min-height:100%;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(10px);
+      background:rgba(255,255,255,.82);
+      border-bottom:1px solid rgba(219,227,238,.9);
+    }
+    .topbar-inner{
+      max-width:1200px;
+      margin:0 auto;
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+    .logo{
+      width:44px;height:44px;
+      border-radius:14px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,var(--primary),#2563eb);
+      color:#fff;
+      box-shadow:var(--shadow);
+      font-weight:700;
+      flex:0 0 auto;
+    }
+    .brand h1{
+      margin:0;
+      font-size:clamp(16px,2vw,22px);
+      line-height:1.2;
+    }
+    .brand p{margin:2px 0 0;color:var(--muted);font-size:13px}
+
+    .pill-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .pill{
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      border-radius:999px;
+      padding:9px 14px;
+      box-shadow:0 4px 12px rgba(15,23,42,.04);
+      cursor:pointer;
+      transition:.15s ease;
+    }
+    .pill:hover{transform:translateY(-1px)}
+    .pill.primary{background:var(--primary); color:#fff; border-color:transparent}
+    .pill.ghost{background:transparent}
+    .pill.danger{background:#fff1f2; color:var(--danger); border-color:#fecdd3}
+
+    .container{
+      width:min(1200px,100%);
+      margin:0 auto;
+      padding:18px 16px 28px;
+      flex:1;
+    }
+
+    .grid{
+      display:grid;
+      gap:var(--gap);
+    }
+    .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media (max-width: 900px){
+      .grid.cols-2,.grid.cols-3{grid-template-columns:1fr}
+    }
+
+    .card{
+      background:var(--surface);
+      border:1px solid rgba(219,227,238,.95);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+    .card.soft{background:rgba(255,255,255,.75)}
+    .card h2,.card h3{margin:0 0 10px}
+    .card p{margin:0 0 12px;color:var(--muted);line-height:1.6}
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.3fr .9fr;
+      gap:var(--gap);
+      align-items:stretch;
+      margin-bottom:var(--gap);
+    }
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr}
+    }
+    .hero-banner{
+      background:linear-gradient(135deg,#0f172a,#1d4ed8 55%, #0ea5e9);
+      color:#fff;
+      border-radius:var(--radius);
+      padding:24px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-banner::after{
+      content:"";
+      position:absolute;
+      right:-50px; top:-50px;
+      width:200px;height:200px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+    }
+    .hero-banner h2{font-size:clamp(24px,4vw,40px); margin:0 0 12px; line-height:1.1}
+    .hero-banner p{color:rgba(255,255,255,.9); margin:0 0 18px; max-width:68ch}
+    .hero-meta{display:flex; gap:10px; flex-wrap:wrap}
+    .meta-badge{
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:13px;
+    }
+
+    .section-title{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin:0 0 12px;
+    }
+    .section-title h3{margin:0;font-size:18px}
+    .section-title small{color:var(--muted)}
+
+    .field{display:flex; flex-direction:column; gap:6px; margin-bottom:12px}
+    .field label{font-size:13px; color:#334155; font-weight:600}
+    .input, textarea, select{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#fff;
+      padding:12px 14px;
+      color:var(--text);
+      outline:none;
+      transition:.15s ease;
+    }
+    textarea{min-height:110px; resize:vertical}
+    .input:focus, textarea:focus, select:focus{border-color:#93c5fd; box-shadow:0 0 0 4px rgba(59,130,246,.10)}
+
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    .row > *{flex:1 1 180px}
+    .btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 16px;
+      cursor:pointer;
+      transition:.15s ease;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:var(--primary); color:#fff}
+    .btn.blue{background:var(--primary-2); color:#fff}
+    .btn.gray{background:#e2e8f0; color:#0f172a}
+    .btn.success{background:var(--success); color:#fff}
+    .btn.danger{background:var(--danger); color:#fff}
+    .btn.outline{background:#fff; border:1px solid var(--border); color:#0f172a}
+    .btn.small{padding:9px 12px; border-radius:12px; font-size:14px}
+
+    .hidden{display:none !important}
+
+    .tabs{
+      display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;
+    }
+    .tab{
+      border:none; background:#e2e8f0; color:#0f172a; padding:11px 14px; border-radius:999px; cursor:pointer;
+    }
+    .tab.active{background:var(--primary); color:#fff}
+
+    .question-list{display:grid; gap:12px}
+    .question-item{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      background:#fff;
+    }
+    .question-item header{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      margin-bottom:10px;
+    }
+    .question-item h4{margin:0; font-size:16px}
+    .question-item .meta{color:var(--muted); font-size:13px; margin-top:4px}
+    .q-image{
+      width:100%;
+      max-height:280px;
+      object-fit:contain;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#f8fafc;
+      margin:10px 0;
+    }
+    .option-list{display:grid; gap:8px; margin-top:10px}
+    .option{
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      background:var(--surface-2);
+      display:flex; justify-content:space-between; gap:10px; align-items:center;
+    }
+    .option.selected{outline:2px solid rgba(29,78,216,.35); background:#eff6ff}
+    .option label{cursor:pointer; width:100%; display:flex; justify-content:space-between; gap:10px}
+    .option .score{color:var(--muted); font-size:13px}
+
+    .toast{
+      position:fixed;
+      left:50%; bottom:18px;
+      transform:translateX(-50%);
+      background:#0f172a;
+      color:#fff;
+      padding:12px 16px;
+      border-radius:999px;
+      box-shadow:var(--shadow);
+      z-index:50;
+      opacity:0;
+      pointer-events:none;
+      transition:.2s ease;
+      max-width:min(92vw,720px);
+      text-align:center;
+    }
+    .toast.show{opacity:1; bottom:22px}
+
+    .modal-backdrop{
+      position:fixed; inset:0;
+      background:rgba(15,23,42,.58);
+      display:none;
+      align-items:center; justify-content:center;
+      padding:16px;
+      z-index:40;
+    }
+    .modal-backdrop.show{display:flex}
+    .modal{
+      width:min(760px,100%);
+      max-height:92vh;
+      overflow:auto;
+      background:#fff;
+      border-radius:22px;
+      box-shadow:0 24px 80px rgba(0,0,0,.22);
+      padding:18px;
+    }
+    .modal header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px}
+    .modal header h3{margin:0}
+
+    .footer-note{color:var(--muted); font-size:13px; line-height:1.6}
+    .small{font-size:13px; color:var(--muted)}
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      background:#eff6ff;
+      color:#1d4ed8;
+      border:1px solid #dbeafe;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:13px;
+      margin-right:8px;
+      margin-bottom:8px;
+    }
+
+    .progress-wrap{
+      width:100%; height:12px; border-radius:999px; background:#e2e8f0; overflow:hidden; margin:10px 0 16px;
+    }
+    .progress-bar{height:100%; width:0%; background:linear-gradient(90deg,#1d4ed8,#0ea5e9); transition:width .2s ease}
+
+    .split{
+      display:grid; grid-template-columns:1.2fr .8fr; gap:var(--gap);
+    }
+    @media (max-width: 900px){.split{grid-template-columns:1fr}}
+
+    .table-wrap{overflow:auto; border:1px solid var(--border); border-radius:16px}
+    table{border-collapse:collapse; width:100%; background:#fff; min-width:760px}
+    th,td{padding:12px 10px; border-bottom:1px solid #eef2f7; text-align:left; vertical-align:top}
+    th{background:#f8fafc; position:sticky; top:0; z-index:1}
+    tr:last-child td{border-bottom:none}
+
+    .login-overlay{
+      position:fixed; inset:0;
+      display:none;
+      align-items:center; justify-content:center;
+      background:linear-gradient(180deg, rgba(15,23,42,.72), rgba(15,23,42,.5));
+      padding:16px;
+      z-index:45;
+    }
+    .login-overlay.show{display:flex}
+    .login-card{
+      width:min(460px,100%);
+      background:#fff;
+      border-radius:22px;
+      box-shadow:0 24px 80px rgba(0,0,0,.26);
+      padding:20px;
+    }
+
+    .editor-grid{display:grid; gap:12px}
+    .editor-grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media (max-width: 900px){.editor-grid.cols-2{grid-template-columns:1fr}}
+
+    .choice-grid{display:grid; gap:10px}
+    .choice-row{display:grid; grid-template-columns:1fr 110px auto; gap:8px; align-items:center}
+    @media (max-width: 640px){
+      .choice-row{grid-template-columns:1fr;}
+    }
+
+    .help-box{
+      background:#f8fafc;
+      border:1px dashed #cbd5e1;
+      border-radius:16px;
+      padding:14px;
+      color:#334155;
+      line-height:1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="logo">SP</div>
+          <div>
+            <h1>Alat Tes Psikologi Internal</h1>
+            <p>SMK PGRI 2 Kediri · responsif untuk desktop & Android</p>
+          </div>
+        </div>
+        <div class="pill-row">
+          <button class="pill ghost" id="btnStudentHome">Beranda</button>
+          <button class="pill ghost" id="btnOpenAdminLogin">Admin</button>
+          <button class="pill primary" id="btnOpenStudent">Mulai Tes</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="homeView">
+        <div class="hero">
+          <div class="hero-banner">
+            <h2>Tes Psikologi Internal Sekolah</h2>
+            <p>
+              Aplikasi ini dibuat agar siswa dapat mengerjakan tes menggunakan email pribadi, sementara admin dapat mengelola soal dan melihat rekap hasil.
+              Aplikasi ini cocok untuk diunggah ke GitHub Pages sebagai satu file HTML.
+            </p>
+            <div class="hero-meta">
+              <span class="meta-badge">Input soal teks / gambar</span>
+              <span class="meta-badge">Simpan progres per email</span>
+              <span class="meta-badge">Rekap ke spreadsheet</span>
+              <span class="meta-badge">Mode super admin & admin</span>
+            </div>
+          </div>
+          <div class="card soft">
+            <div class="section-title">
+              <h3>Masuk sebagai siswa</h3>
+            </div>
+            <div class="field">
+              <label for="studentEmail">Email pribadi siswa</label>
+              <input id="studentEmail" class="input" type="email" placeholder="contoh: nama@domain.com" autocomplete="email" />
+            </div>
+            <div class="row">
+              <button class="btn blue" id="btnStartTest">Lanjutkan Tes</button>
+              <button class="btn outline" id="btnResumeDraft">Lanjutkan Draft</button>
+            </div>
+            <p class="small" style="margin-top:10px">Progres disimpan di perangkat ini, dan bisa dikirim ke spreadsheet jika endpoint diset di mode admin.</p>
+          </div>
+        </div>
+
+        <div class="grid cols-2">
+          <div class="card">
+            <div class="section-title">
+              <h3>Petunjuk penggunaan</h3>
+            </div>
+            <div class="help-box">
+              <div>1. Siswa mengisi email pribadi lalu memulai tes.</div>
+              <div>2. Admin login untuk menambah, mengubah, atau menghapus soal.</div>
+              <div>3. Hasil tes tersimpan otomatis di browser, dan bisa dikirim ke Google Sheets / spreadsheet lain.</div>
+              <div>4. File ini bisa langsung dijadikan <b>index.html</b> dan dipublish lewat GitHub Pages.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title">
+              <h3>Status aplikasi</h3>
+            </div>
+            <div id="statusPills"></div>
+            <p class="footer-note">
+              Catatan: login admin di HTML statis cocok untuk penggunaan internal sekolah. Untuk keamanan tinggi, sebaiknya nanti dipindahkan ke backend / Firebase Auth / Google Login.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="testView" class="hidden">
+        <div class="card">
+          <div class="section-title">
+            <div>
+              <h3>Tes aktif</h3>
+              <small id="testEmailLabel">Email: -</small>
+            </div>
+            <div class="row" style="justify-content:flex-end; flex:0 0 auto">
+              <button class="btn outline small" id="btnSaveDraft">Simpan Progres</button>
+              <button class="btn gray small" id="btnBackHome1">Kembali</button>
+            </div>
+          </div>
+          <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+          <div id="questionHost"></div>
+          <div class="row" style="margin-top:16px">
+            <button class="btn outline" id="btnPrevQ">Sebelumnya</button>
+            <button class="btn blue" id="btnNextQ">Selanjutnya</button>
+            <button class="btn success" id="btnFinishTest">Selesai & Kirim</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="adminView" class="hidden">
+        <div class="split">
+          <div class="card">
+            <div class="section-title">
+              <div>
+                <h3>Panel Admin</h3>
+                <small id="adminRoleLabel">Peran: -</small>
+              </div>
+              <div class="row" style="justify-content:flex-end; flex:0 0 auto">
+                <button class="btn outline small" id="btnLogoutAdmin">Keluar</button>
+                <button class="btn gray small" id="btnBackHome2">Kembali</button>
+              </div>
+            </div>
+
+            <div class="tabs">
+              <button class="tab active" data-tab="questions">Soal</button>
+              <button class="tab" data-tab="results">Rekap</button>
+              <button class="tab" data-tab="settings">Pengaturan</button>
+            </div>
+
+            <div id="adminQuestionsTab">
+              <div class="row" style="margin-bottom:12px; align-items:center">
+                <span class="badge" id="questionCountBadge">0 soal aktif</span>
+                <button class="btn primary small" id="btnAddQuestion">Tambah Soal</button>
+              </div>
+              <div class="question-list" id="questionList"></div>
+            </div>
+
+            <div id="adminResultsTab" class="hidden">
+              <div class="row" style="margin-bottom:12px; align-items:center">
+                <span class="badge" id="resultCountBadge">0 hasil</span>
+                <button class="btn success small" id="btnExportCSV">Unduh CSV</button>
+                <button class="btn blue small" id="btnSyncNow">Kirim Ulang ke Spreadsheet</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Waktu</th>
+                      <th>Email</th>
+                      <th>Skor</th>
+                      <th>Ringkasan Jawaban</th>
+                    </tr>
+                  </thead>
+                  <tbody id="resultsTable"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div id="adminSettingsTab" class="hidden">
+              <div class="section-title">
+                <h3>Pengaturan spreadsheet</h3>
+              </div>
+              <div class="help-box" style="margin-bottom:12px">
+                Tempel URL Google Apps Script Web App atau endpoint spreadsheet Anda di bawah ini. Saat tes selesai, aplikasi akan mengirim hasil ke URL tersebut dalam format JSON.
+              </div>
+              <div class="field">
+                <label for="sheetEndpoint">Spreadsheet endpoint URL</label>
+                <input id="sheetEndpoint" class="input" type="url" placeholder="https://script.google.com/macros/s/.../exec" />
+              </div>
+              <div class="row">
+                <button class="btn blue" id="btnSaveSettings">Simpan Pengaturan</button>
+                <button class="btn outline" id="btnTestEndpoint">Tes Endpoint</button>
+              </div>
+              <p class="footer-note" style="margin-top:12px">
+                Gunakan Google Sheets + Apps Script supaya rekap bisa benar-benar tersimpan ke cloud.
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title">
+              <h3>Info login</h3>
+            </div>
+            <div class="help-box">
+              <div><b>Super admin</b></div>
+              <div>Email: yuliaratri17@smkpgri2kdr.sch.id</div>
+              <div>Password: rayarvian20</div>
+              <hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0">
+              <div><b>Admin biasa</b></div>
+              <div>Email: admin</div>
+              <div>Password: bksmkngrida2026</div>
+              <hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0">
+              <div>Super admin bisa tambah / edit / hapus soal. Admin biasa hanya melihat rekap hasil.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <header>
+        <h3>Login Admin</h3>
+        <button class="btn outline small" id="btnCloseLogin">Tutup</button>
+      </header>
+      <div class="field">
+        <label for="adminEmail">Email</label>
+        <input id="adminEmail" class="input" type="text" placeholder="Email admin" />
+      </div>
+      <div class="field">
+        <label for="adminPassword">Password</label>
+        <input id="adminPassword" class="input" type="password" placeholder="Password" />
+      </div>
+      <div class="row">
+        <button class="btn primary" id="btnDoLogin">Masuk</button>
+      </div>
+      <p class="footer-note" style="margin-top:12px">
+        Login ini dibuat untuk aplikasi internal berbasis HTML statis. Untuk penggunaan publik, login sebaiknya dipindah ke sistem autentikasi yang aman.
+      </p>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="questionModalBackdrop">
+    <div class="modal">
+      <header>
+        <h3 id="questionModalTitle">Tambah Soal</h3>
+        <button class="btn outline small" id="btnCloseQuestionModal">Tutup</button>
+      </header>
+      <div class="editor-grid cols-2">
+        <div class="field" style="grid-column:1/-1">
+          <label for="qPrompt">Teks soal</label>
+          <textarea id="qPrompt" placeholder="Tulis pertanyaan di sini..."></textarea>
+        </div>
+        <div class="field">
+          <label for="qType">Tipe soal</label>
+          <select id="qType">
+            <option value="mcq">Pilihan ganda</option>
+            <option value="text">Isian / jawaban singkat</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="qImageFile">Gambar soal (opsional)</label>
+          <input id="qImageFile" class="input" type="file" accept="image/*" />
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label for="qImageUrl">Atau URL gambar (opsional)</label>
+          <input id="qImageUrl" class="input" type="url" placeholder="https://..." />
+        </div>
+      </div>
+
+      <div id="mcqEditor" style="margin-top:8px">
+        <div class="section-title">
+          <h3 style="font-size:16px">Opsi jawaban</h3>
+          <button class="btn outline small" id="btnAddOption">Tambah Opsi</button>
+        </div>
+        <div class="choice-grid" id="optionEditor"></div>
+        <p class="footer-note">Untuk tiap opsi, isi teks dan bobot skor. Bobot bisa 0, 1, 2, dst.</p>
+      </div>
+
+      <div id="textEditor" class="hidden" style="margin-top:8px">
+        <div class="help-box">Soal isian hanya menyimpan jawaban siswa. Cocok untuk pertanyaan reflektif atau deskriptif.</div>
+      </div>
+
+      <div class="row" style="margin-top:16px">
+        <button class="btn primary" id="btnSaveQuestion">Simpan Soal</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEYS = {
+      questions: 'sp_psikologi_questions_v1',
+      results: 'sp_psikologi_results_v1',
+      settings: 'sp_psikologi_settings_v1',
+      drafts: 'sp_psikologi_drafts_v1',
+      adminSession: 'sp_psikologi_admin_session_v1'
+    };
+
+    const ADMIN_CREDENTIALS = [
+      { email: 'yuliaratri17@smkpgri2kdr.sch.id', password: 'rayarvian20', role: 'superadmin', label: 'Super Admin' },
+      { email: 'admin', password: 'bksmkngrida2026', role: 'admin', label: 'Admin Biasa' }
+    ];
+
+    const state = {
+      currentView: 'home',
+      currentTab: 'questions',
+      admin: null,
+      questions: [],
+      results: [],
+      settings: {},
+      draftEmail: '',
+      testIndex: 0,
+      answers: {},
+      editingQuestionId: null,
+      pendingImageData: null
+    };
+
+    const el = (id) => document.getElementById(id);
+    const escapeHtml = (str) => String(str || '')
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;')
+      .replaceAll("'",'&#39;');
+
+    function uid(){
+      return 'q_' + Math.random().toString(36).slice(2,9) + Date.now().toString(36);
+    }
+
+    function nowText(){
+      return new Date().toLocaleString('id-ID', { dateStyle:'medium', timeStyle:'short' });
+    }
+
+    function saveAll(){
+      localStorage.setItem(STORAGE_KEYS.questions, JSON.stringify(state.questions));
+      localStorage.setItem(STORAGE_KEYS.results, JSON.stringify(state.results));
+      localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(state.settings));
+      if (state.admin) {
+        localStorage.setItem(STORAGE_KEYS.adminSession, JSON.stringify(state.admin));
+      }
+    }
+
+    function loadAll(){
+      state.questions = safeParse(localStorage.getItem(STORAGE_KEYS.questions), []);
+      state.results = safeParse(localStorage.getItem(STORAGE_KEYS.results), []);
+      state.settings = safeParse(localStorage.getItem(STORAGE_KEYS.settings), {});
+      state.admin = safeParse(localStorage.getItem(STORAGE_KEYS.adminSession), null);
+      if (!Array.isArray(state.questions) || !state.questions.length) {
+        state.questions = seedQuestions();
+        localStorage.setItem(STORAGE_KEYS.questions, JSON.stringify(state.questions));
+      }
+    }
+
+    function safeParse(value, fallback){
+      try { return value ? JSON.parse(value) : fallback; } catch { return fallback; }
+    }
+
+    function seedQuestions(){
+      return [
+        {
+          id: uid(),
+          type: 'mcq',
+          prompt: 'Saya merasa mudah bergaul dengan teman baru.',
+          image: '',
+          options: [
+            { text: 'Sangat tidak setuju', score: 0 },
+            { text: 'Tidak setuju', score: 1 },
+            { text: 'Setuju', score: 2 },
+            { text: 'Sangat setuju', score: 3 }
+          ]
+        },
+        {
+          id: uid(),
+          type: 'text',
+          prompt: 'Tuliskan satu hal yang biasanya membuat kamu merasa lebih tenang saat sedang cemas.',
+          image: '',
+          options: []
+        }
+      ];
+    }
+
+    function toast(message){
+      const t = el('toast');
+      t.textContent = message;
+      t.classList.add('show');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    }
+
+    function setView(view){
+      state.currentView = view;
+      el('homeView').classList.toggle('hidden', view !== 'home');
+      el('testView').classList.toggle('hidden', view !== 'test');
+      el('adminView').classList.toggle('hidden', view !== 'admin');
+      renderStatus();
+      if (view === 'admin') renderAdmin();
+      if (view === 'test') renderQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderStatus(){
+      const box = el('statusPills');
+      const adminText = state.admin ? `Login admin aktif: ${state.admin.label}` : 'Belum login admin';
+      const sheetText = state.settings.sheetEndpoint ? 'Spreadsheet endpoint tersambung' : 'Spreadsheet endpoint belum diisi';
+      box.innerHTML = `
+        <span class="badge">${escapeHtml(adminText)}</span>
+        <span class="badge">${escapeHtml(sheetText)}</span>
+        <span class="badge">${state.questions.length} soal tersimpan</span>
+        <span class="badge">${state.results.length} hasil rekap</span>
+      `;
+    }
+
+    function openLogin(){
+      el('loginOverlay').classList.add('show');
+      el('adminEmail').value = '';
+      el('adminPassword').value = '';
+      setTimeout(() => el('adminEmail').focus(), 100);
+    }
+
+    function closeLogin(){
+      el('loginOverlay').classList.remove('show');
+    }
+
+    function doLogin(){
+      const email = el('adminEmail').value.trim();
+      const password = el('adminPassword').value;
+      const found = ADMIN_CREDENTIALS.find(a => a.email === email && a.password === password);
+      if (!found) {
+        toast('Login gagal. Cek email dan password admin.');
+        return;
+      }
+      state.admin = { email: found.email, role: found.role, label: found.label };
+      saveAll();
+      closeLogin();
+      toast(`Masuk sebagai ${found.label}`);
+      el('adminRoleLabel').textContent = `Peran: ${found.label}`;
+      setView('admin');
+    }
+
+    function requireAdmin(){
+      if (!state.admin) {
+        toast('Silakan login admin terlebih dahulu.');
+        openLogin();
+        return false;
+      }
+      return true;
+    }
+
+    function renderAdmin(){
+      el('adminRoleLabel').textContent = `Peran: ${state.admin ? state.admin.label : '-'}`;
+      el('sheetEndpoint').value = state.settings.sheetEndpoint || '';
+      renderTabs();
+      renderQuestions();
+      renderResults();
+      renderStatus();
+    }
+
+    function renderTabs(){
+      document.querySelectorAll('.tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === state.currentTab);
+      });
+      el('adminQuestionsTab').classList.toggle('hidden', state.currentTab !== 'questions');
+      el('adminResultsTab').classList.toggle('hidden', state.currentTab !== 'results');
+      el('adminSettingsTab').classList.toggle('hidden', state.currentTab !== 'settings');
+    }
+
+    function renderQuestions(){
+      el('questionCountBadge').textContent = `${state.questions.length} soal aktif`;
+      const host = el('questionList');
+      if (!state.questions.length) {
+        host.innerHTML = '<div class="help-box">Belum ada soal. Tambahkan soal pertama dari tombol <b>Tambah Soal</b>.</div>';
+        return;
+      }
+      host.innerHTML = state.questions.map((q, idx) => `
+        <div class="question-item">
+          <header>
+            <div>
+              <h4>${idx+1}. ${escapeHtml(q.prompt || '(Tanpa teks soal)')}</h4>
+              <div class="meta">Tipe: ${q.type === 'mcq' ? 'Pilihan ganda' : 'Isian'} · ID: ${q.id}</div>
+            </div>
+            ${state.admin?.role === 'superadmin' ? `
+              <div class="row" style="flex:0 0 auto; justify-content:flex-end">
+                <button class="btn outline small" onclick="editQuestion('${q.id}')">Edit</button>
+                <button class="btn danger small" onclick="deleteQuestion('${q.id}')">Hapus</button>
+              </div>
+            ` : ''}
+          </header>
+          ${q.image ? `<img class="q-image" src="${q.image}" alt="Gambar soal">` : ''}
+          ${q.type === 'mcq' ? `
+            <div class="option-list">
+              ${q.options.map(opt => `<div class="option"><span>${escapeHtml(opt.text)}</span><span class="score">Skor ${Number(opt.score || 0)}</span></div>`).join('')}
+            </div>
+          ` : '<div class="small">Jawaban siswa akan disimpan sebagai teks.</div>'}
+        </div>
+      `).join('');
+    }
+
+    function renderResults(){
+      el('resultCountBadge').textContent = `${state.results.length} hasil`;
+      const body = el('resultsTable');
+      if (!state.results.length) {
+        body.innerHTML = '<tr><td colspan="4">Belum ada hasil tes.</td></tr>';
+        return;
+      }
+      body.innerHTML = state.results.slice().reverse().map(r => `
+        <tr>
+          <td>${escapeHtml(r.time)}</td>
+          <td>${escapeHtml(r.email)}</td>
+          <td><b>${Number(r.score || 0)}</b></td>
+          <td>${escapeHtml(r.summary || '')}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderQuestion(){
+      const email = getStudentEmail();
+      el('testEmailLabel').textContent = email ? `Email: ${email}` : 'Email: belum diisi';
+      const q = state.questions[state.testIndex];
+      if (!q) {
+        el('questionHost').innerHTML = '<div class="help-box">Belum ada soal. Silakan login admin untuk menambahkan soal.</div>';
+        el('progressBar').style.width = '0%';
+        return;
+      }
+
+      const total = state.questions.length;
+      const progress = ((state.testIndex + 1) / total) * 100;
+      el('progressBar').style.width = progress + '%';
+
+      let content = `
+        <div class="question-item" style="border:none; padding:0">
+          <div class="section-title" style="margin-bottom:8px">
+            <h3>Soal ${state.testIndex + 1} dari ${total}</h3>
+            <small>${q.type === 'mcq' ? 'Pilihan ganda' : 'Isian'}</small>
+          </div>
+          <h4 style="font-size:18px; margin:0 0 8px; line-height:1.5">${escapeHtml(q.prompt || '')}</h4>
+          ${q.image ? `<img class="q-image" src="${q.image}" alt="Gambar soal">` : ''}
+      `;
+
+      if (q.type === 'mcq') {
+        const current = state.answers[q.id] || '';
+        content += `
+          <div class="option-list">
+            ${q.options.map((opt, idx) => {
+              const selected = current === String(idx);
+              return `
+                <div class="option ${selected ? 'selected' : ''}">
+                  <label>
+                    <span>
+                      <input type="radio" name="answer_${q.id}" value="${idx}" ${selected ? 'checked' : ''} onchange="saveAnswer('${q.id}', this.value)"> 
+                      ${escapeHtml(opt.text)}
+                    </span>
+                    <span class="score">Skor ${Number(opt.score || 0)}</span>
+                  </label>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else {
+        const current = state.answers[q.id] || '';
+        content += `
+          <div class="field" style="margin-top:12px">
+            <label for="textAnswer">Jawaban</label>
+            <textarea id="textAnswer" placeholder="Tulis jawaban di sini...">${escapeHtml(current)}</textarea>
+          </div>
+          <div class="small">Jawaban akan tersimpan saat berpindah soal atau saat klik Simpan Progres.</div>
+        `;
+      }
+
+      content += `</div>`;
+      el('questionHost').innerHTML = content;
+      renderNavState();
+    }
+
+    function renderNavState(){
+      el('btnPrevQ').disabled = state.testIndex <= 0;
+      el('btnNextQ').disabled = state.testIndex >= state.questions.length - 1;
+    }
+
+    function getStudentEmail(){
+      return (el('studentEmail').value || state.draftEmail || '').trim();
+    }
+
+    function startTest(resume=false){
+      const email = getStudentEmail();
+      if (!email || !email.includes('@')) {
+        toast('Masukkan email pribadi siswa yang valid.');
+        el('studentEmail').focus();
+        return;
+      }
+      state.draftEmail = email;
+      const draft = safeParse(localStorage.getItem(draftKey(email)), null);
+      state.answers = draft?.answers || {};
+      state.testIndex = resume && draft ? draft.index || 0 : 0;
+      if (state.questions.length === 0) {
+        toast('Belum ada soal.');
+        return;
+      }
+      setView('test');
+      toast(resume && draft ? 'Draft berhasil dibuka.' : 'Tes dimulai.');
+    }
+
+    function draftKey(email){ return `${STORAGE_KEYS.drafts}_${email.toLowerCase()}`; }
+
+    function saveAnswer(questionId, value){
+      state.answers[questionId] = value;
+      saveDraftOnly();
+    }
+
+    function saveDraftOnly(){
+      const email = getStudentEmail();
+      if (!email || !email.includes('@')) return;
+      localStorage.setItem(draftKey(email), JSON.stringify({
+        email,
+        index: state.testIndex,
+        answers: state.answers,
+        updatedAt: new Date().toISOString()
+      }));
+    }
+
+    function collectTestData(){
+      const email = getStudentEmail();
+      let totalScore = 0;
+      const summaryParts = [];
+      for (const q of state.questions) {
+        const answer = state.answers[q.id];
+        if (q.type === 'mcq') {
+          const idx = Number(answer);
+          const opt = q.options?.[idx];
+          if (opt) {
+            totalScore += Number(opt.score || 0);
+            summaryParts.push(`${q.prompt.slice(0,26)}: ${opt.text}`);
+          } else {
+            summaryParts.push(`${q.prompt.slice(0,26)}: -`);
+          }
+        } else {
+          summaryParts.push(`${q.prompt.slice(0,26)}: ${String(answer || '-').slice(0,40)}`);
+        }
+      }
+      return { email, score: totalScore, summary: summaryParts.join(' | ') };
+    }
+
+    async function submitTest(){
+      const email = getStudentEmail();
+      if (!email || !email.includes('@')) {
+        toast('Email siswa tidak valid.');
+        return;
+      }
+      if (!state.questions.length) {
+        toast('Tidak ada soal untuk dikirim.');
+        return;
+      }
+      const data = collectTestData();
+      const record = {
+        time: nowText(),
+        email: data.email,
+        score: data.score,
+        summary: data.summary,
+        answers: state.answers,
+        submittedAt: new Date().toISOString()
+      };
+      state.results.push(record);
+      saveAll();
+      localStorage.removeItem(draftKey(email));
+      await trySendToSpreadsheet(record);
+      toast('Hasil tes tersimpan dan dikirim.');
+      state.answers = {};
+      state.testIndex = 0;
+      setView('home');
+    }
+
+    async function trySendToSpreadsheet(record){
+      const endpoint = (state.settings.sheetEndpoint || '').trim();
+      if (!endpoint) return;
+      try {
+        await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            source: 'SMK PGRI 2 Kediri Psychological Test',
+            type: 'result',
+            record
+          })
+        });
+      } catch (err) {
+        console.warn('Gagal mengirim ke spreadsheet:', err);
+      }
+    }
+
+    function editQuestion(id){
+      if (state.admin?.role !== 'superadmin') return;
+      const q = state.questions.find(x => x.id === id);
+      if (!q) return;
+      state.editingQuestionId = id;
+      el('questionModalTitle').textContent = 'Edit Soal';
+      el('qPrompt').value = q.prompt || '';
+      el('qType').value = q.type || 'mcq';
+      el('qImageUrl').value = q.image && q.image.startsWith('http') ? q.image : '';
+      state.pendingImageData = q.image && q.image.startsWith('data:') ? q.image : null;
+      el('mcqEditor').classList.toggle('hidden', q.type !== 'mcq');
+      el('textEditor').classList.toggle('hidden', q.type !== 'text');
+      renderOptionEditor(q.options || [{ text:'', score:0 }]);
+      el('questionModalBackdrop').classList.add('show');
+    }
+
+    function deleteQuestion(id){
+      if (state.admin?.role !== 'superadmin') return;
+      if (!confirm('Hapus soal ini?')) return;
+      state.questions = state.questions.filter(q => q.id !== id);
+      saveAll();
+      renderQuestions();
+      renderStatus();
+      toast('Soal dihapus.');
+    }
+
+    function openQuestionModal(){
+      if (state.admin?.role !== 'superadmin') {
+        toast('Hanya super admin yang bisa menambah / mengedit soal.');
+        return;
+      }
+      state.editingQuestionId = null;
+      state.pendingImageData = null;
+      el('questionModalTitle').textContent = 'Tambah Soal';
+      el('qPrompt').value = '';
+      el('qType').value = 'mcq';
+      el('qImageFile').value = '';
+      el('qImageUrl').value = '';
+      el('mcqEditor').classList.remove('hidden');
+      el('textEditor').classList.add('hidden');
+      renderOptionEditor([
+        { text:'', score:0 },
+        { text:'', score:1 },
+        { text:'', score:2 },
+        { text:'', score:3 }
+      ]);
+      el('questionModalBackdrop').classList.add('show');
+    }
+
+    function closeQuestionModal(){
+      el('questionModalBackdrop').classList.remove('show');
+    }
+
+    function renderOptionEditor(options){
+      const host = el('optionEditor');
+      const arr = options && options.length ? options : [{ text:'', score:0 }];
+      host.innerHTML = arr.map((opt, idx) => `
+        <div class="choice-row" data-idx="${idx}">
+          <input class="input opt-text" placeholder="Teks opsi ${idx+1}" value="${escapeHtml(opt.text || '')}">
+          <input class="input opt-score" type="number" min="0" step="1" placeholder="Skor" value="${Number(opt.score || 0)}">
+          <button class="btn danger small" type="button" onclick="removeOptionRow(this)">Hapus</button>
+        </div>
+      `).join('');
+    }
+
+    function gatherOptions(){
+      const rows = [...document.querySelectorAll('#optionEditor .choice-row')];
+      return rows.map(row => ({
+        text: row.querySelector('.opt-text').value.trim(),
+        score: Number(row.querySelector('.opt-score').value || 0)
+      })).filter(x => x.text);
+    }
+
+    function removeOptionRow(btn){
+      btn.closest('.choice-row')?.remove();
+    }
+    window.removeOptionRow = removeOptionRow;
+
+    function addOptionRow(){
+      const host = el('optionEditor');
+      const idx = host.querySelectorAll('.choice-row').length + 1;
+      const div = document.createElement('div');
+      div.className = 'choice-row';
+      div.innerHTML = `
+        <input class="input opt-text" placeholder="Teks opsi ${idx}">
+        <input class="input opt-score" type="number" min="0" step="1" placeholder="Skor" value="0">
+        <button class="btn danger small" type="button" onclick="removeOptionRow(this)">Hapus</button>
+      `;
+      host.appendChild(div);
+    }
+
+    async function saveQuestion(){
+      if (state.admin?.role !== 'superadmin') return;
+      const prompt = el('qPrompt').value.trim();
+      const type = el('qType').value;
+      if (!prompt) {
+        toast('Teks soal belum diisi.');
+        return;
+      }
+      let image = state.pendingImageData || el('qImageUrl').value.trim();
+      if (el('qImageFile').files && el('qImageFile').files[0]) {
+        image = await fileToDataUrl(el('qImageFile').files[0]);
+      }
+      const question = {
+        id: state.editingQuestionId || uid(),
+        type,
+        prompt,
+        image,
+        options: type === 'mcq' ? gatherOptions() : []
+      };
+      if (type === 'mcq' && question.options.length < 2) {
+        toast('Pilihan ganda minimal 2 opsi.');
+        return;
+      }
+      if (state.editingQuestionId) {
+        state.questions = state.questions.map(q => q.id === state.editingQuestionId ? question : q);
+      } else {
+        state.questions.push(question);
+      }
+      state.questions = state.questions;
+      saveAll();
+      renderQuestions();
+      renderStatus();
+      closeQuestionModal();
+      toast('Soal berhasil disimpan.');
+    }
+
+    function fileToDataUrl(file){
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function exportCSV(){
+      if (!state.results.length) {
+        toast('Belum ada data untuk diekspor.');
+        return;
+      }
+      const headers = ['time','email','score','summary'];
+      const rows = state.results.map(r => headers.map(h => csvCell(r[h])).join(','));
+      const csv = [headers.join(','), ...rows].join('\n');
+      downloadFile('rekap_tes_psikologi.csv', csv, 'text/csv;charset=utf-8;');
+    }
+
+    function csvCell(value){
+      const text = String(value ?? '');
+      return '"' + text.replaceAll('"', '""') + '"';
+    }
+
+    function downloadFile(filename, content, mime){
+      const blob = new Blob([content], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    async function syncResults(){
+      if (!state.settings.sheetEndpoint) {
+        toast('Isi spreadsheet endpoint dulu.');
+        return;
+      }
+      const ok = await sendBulkToSpreadsheet();
+      toast(ok ? 'Data dikirim ulang ke spreadsheet.' : 'Gagal mengirim ke spreadsheet.');
+    }
+
+    async function sendBulkToSpreadsheet(){
+      try {
+        const payload = {
+          source: 'SMK PGRI 2 Kediri Psychological Test',
+          type: 'bulk-results',
+          results: state.results
+        };
+        await fetch(state.settings.sheetEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        return true;
+      } catch (e) {
+        console.warn(e);
+        return false;
+      }
+    }
+
+    async function testEndpoint(){
+      if (!state.settings.sheetEndpoint) {
+        toast('Masukkan URL endpoint terlebih dahulu.');
+        return;
+      }
+      try {
+        const res = await fetch(state.settings.sheetEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type:'ping', time:new Date().toISOString() })
+        });
+        toast(`Tes endpoint terkirim. Status: ${res.status}`);
+      } catch (e) {
+        toast('Tes endpoint gagal.');
+      }
+    }
+
+    function saveSettings(){
+      state.settings.sheetEndpoint = el('sheetEndpoint').value.trim();
+      saveAll();
+      renderStatus();
+      toast('Pengaturan disimpan.');
+    }
+
+    function logoutAdmin(){
+      state.admin = null;
+      localStorage.removeItem(STORAGE_KEYS.adminSession);
+      renderStatus();
+      toast('Admin keluar.');
+      setView('home');
+    }
+
+    function restoreDraftIfAny(){
+      const email = el('studentEmail').value.trim();
+      if (!email) {
+        toast('Masukkan email siswa dulu.');
+        return;
+      }
+      const draft = safeParse(localStorage.getItem(draftKey(email)), null);
+      if (!draft) {
+        toast('Belum ada draft tersimpan untuk email ini.');
+        return;
+      }
+      state.draftEmail = email;
+      state.answers = draft.answers || {};
+      state.testIndex = draft.index || 0;
+      setView('test');
+      toast('Draft dibuka.');
+    }
+
+    function goQuestion(delta){
+      const q = state.questions[state.testIndex];
+      if (q && q.type === 'text') {
+        const ta = el('textAnswer');
+        if (ta) state.answers[q.id] = ta.value;
+      }
+      saveDraftOnly();
+      state.testIndex = Math.max(0, Math.min(state.questions.length - 1, state.testIndex + delta));
+      renderQuestion();
+    }
+
+    function bindEvents(){
+      el('btnOpenAdminLogin').addEventListener('click', openLogin);
+      el('btnCloseLogin').addEventListener('click', closeLogin);
+      el('btnDoLogin').addEventListener('click', doLogin);
+      el('loginOverlay').addEventListener('click', (e) => { if (e.target === el('loginOverlay')) closeLogin(); });
+
+      el('btnStudentHome').addEventListener('click', () => setView('home'));
+      el('btnBackHome1').addEventListener('click', () => setView('home'));
+      el('btnBackHome2').addEventListener('click', () => setView('home'));
+      el('btnOpenStudent').addEventListener('click', () => {
+        const email = el('studentEmail').value.trim();
+        if (email) { startTest(false); } else { el('studentEmail').focus(); toast('Isi email siswa dulu.'); }
+      });
+      el('btnStartTest').addEventListener('click', () => startTest(false));
+      el('btnResumeDraft').addEventListener('click', restoreDraftIfAny);
+      el('btnSaveDraft').addEventListener('click', () => { saveDraftOnly(); toast('Progres disimpan.'); });
+      el('btnPrevQ').addEventListener('click', () => goQuestion(-1));
+      el('btnNextQ').addEventListener('click', () => goQuestion(1));
+      el('btnFinishTest').addEventListener('click', submitTest);
+
+      el('btnAddQuestion').addEventListener('click', openQuestionModal);
+      el('btnCloseQuestionModal').addEventListener('click', closeQuestionModal);
+      el('questionModalBackdrop').addEventListener('click', (e) => { if (e.target === el('questionModalBackdrop')) closeQuestionModal(); });
+      el('btnSaveQuestion').addEventListener('click', saveQuestion);
+      el('btnAddOption').addEventListener('click', addOptionRow);
+
+      el('qType').addEventListener('change', (e) => {
+        const type = e.target.value;
+        el('mcqEditor').classList.toggle('hidden', type !== 'mcq');
+        el('textEditor').classList.toggle('hidden', type !== 'text');
+      });
+
+      el('btnSaveSettings').addEventListener('click', saveSettings);
+      el('btnTestEndpoint').addEventListener('click', testEndpoint);
+      el('btnSyncNow').addEventListener('click', syncResults);
+      el('btnExportCSV').addEventListener('click', exportCSV);
+      el('btnLogoutAdmin').addEventListener('click', logoutAdmin);
+
+      document.querySelectorAll('.tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.currentTab = btn.dataset.tab;
+          renderTabs();
+        });
+      });
+    }
+
+    window.editQuestion = editQuestion;
+    window.deleteQuestion = deleteQuestion;
+    window.saveAnswer = saveAnswer;
+
+    function init(){
+      loadAll();
+      bindEvents();
+      renderStatus();
+      if (state.admin) {
+        el('adminRoleLabel').textContent = `Peran: ${state.admin.label}`;
+      }
+      setView('home');
+    }
+
+    init();
+  </script>
+</body>
+</html>

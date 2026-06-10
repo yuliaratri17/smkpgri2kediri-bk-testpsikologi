@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <meta name="theme-color" content="#0f172a" />
-  <title>Aplikasi Tes Psikologi Internal - SMK PGRI 2 Kediri</title>
+  <title>Alat Tes Psikologi Internal - SMK PGRI 2 Kediri</title>
   <style>
     :root{
       --bg:#f4f7fb;
@@ -29,8 +29,9 @@
     body{
       margin:0;
       font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-      background:linear-gradient(180deg,#eef4ff 0%, #f7fafc 35%, #f4f7fb 100%);
+      background:var(--bg);
       color:var(--text);
+      transition:background .25s ease, color .25s ease;
     }
 
     a{color:var(--primary-2); text-decoration:none}
@@ -40,14 +41,36 @@
       min-height:100%;
       display:flex;
       flex-direction:column;
+      position:relative;
+      overflow-x:hidden;
+    }
+
+    .bg-layer{
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      background:linear-gradient(180deg,#eef4ff 0%, #f7fafc 40%, #f4f7fb 100%);
+      background-size:cover;
+      background-position:center;
+      filter:saturate(1.02);
+      transition:background .3s ease;
+    }
+
+    .bg-overlay{
+      position:fixed;
+      inset:0;
+      z-index:-1;
+      background:radial-gradient(circle at top right, rgba(255,255,255,.4), transparent 30%),
+                 radial-gradient(circle at bottom left, rgba(14,165,233,.08), transparent 30%);
+      pointer-events:none;
     }
 
     .topbar{
       position:sticky;
       top:0;
       z-index:20;
-      backdrop-filter:blur(10px);
-      background:rgba(255,255,255,.82);
+      backdrop-filter:blur(12px);
+      background:rgba(255,255,255,.80);
       border-bottom:1px solid rgba(219,227,238,.9);
     }
     .topbar-inner{
@@ -67,7 +90,7 @@
       min-width:0;
     }
     .logo{
-      width:44px;height:44px;
+      width:46px;height:46px;
       border-radius:14px;
       display:grid;place-items:center;
       background:linear-gradient(135deg,var(--primary),#2563eb);
@@ -75,11 +98,14 @@
       box-shadow:var(--shadow);
       font-weight:700;
       flex:0 0 auto;
+      overflow:hidden;
     }
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
     .brand h1{
       margin:0;
       font-size:clamp(16px,2vw,22px);
       line-height:1.2;
+      color:var(--text);
     }
     .brand p{margin:2px 0 0;color:var(--muted);font-size:13px}
 
@@ -123,13 +149,13 @@
       box-shadow:var(--shadow);
       padding:18px;
     }
-    .card.soft{background:rgba(255,255,255,.75)}
+    .card.soft{background:rgba(255,255,255,.82)}
     .card h2,.card h3{margin:0 0 10px}
     .card p{margin:0 0 12px;color:var(--muted);line-height:1.6}
 
     .hero{
       display:grid;
-      grid-template-columns:1.3fr .9fr;
+      grid-template-columns:1.15fr .85fr;
       gap:var(--gap);
       align-items:stretch;
       margin-bottom:var(--gap);
@@ -137,6 +163,7 @@
     @media (max-width: 900px){
       .hero{grid-template-columns:1fr}
     }
+
     .hero-banner{
       background:linear-gradient(135deg,#0f172a,#1d4ed8 55%, #0ea5e9);
       color:#fff;
@@ -145,12 +172,14 @@
       box-shadow:var(--shadow);
       position:relative;
       overflow:hidden;
+      min-height:220px;
+      border:1px solid rgba(255,255,255,.12);
     }
     .hero-banner::after{
       content:"";
       position:absolute;
-      right:-50px; top:-50px;
-      width:200px;height:200px;
+      right:-60px; top:-70px;
+      width:240px;height:240px;
       border-radius:50%;
       background:rgba(255,255,255,.08);
     }
@@ -232,7 +261,7 @@
       display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
       margin-bottom:10px;
     }
-    .question-item h4{margin:0; font-size:16px}
+    .question-item h4{margin:0; font-size:16px; line-height:1.45}
     .question-item .meta{color:var(--muted); font-size:13px; margin-top:4px}
     .q-image{
       width:100%;
@@ -252,8 +281,10 @@
       display:flex; justify-content:space-between; gap:10px; align-items:center;
     }
     .option.selected{outline:2px solid rgba(29,78,216,.35); background:#eff6ff}
-    .option label{cursor:pointer; width:100%; display:flex; justify-content:space-between; gap:10px}
-    .option .score{color:var(--muted); font-size:13px}
+    .option label{cursor:pointer; width:100%; display:flex; justify-content:space-between; gap:10px; align-items:flex-start}
+    .option .score{color:var(--muted); font-size:13px; flex:0 0 auto}
+    .option-image{max-width:100%; max-height:160px; border-radius:12px; border:1px solid var(--border); margin-top:8px; display:block}
+    .answer-thumb{display:block; max-width:100%; max-height:110px; border-radius:10px; border:1px solid var(--border); background:#fff; margin-top:8px}
 
     .toast{
       position:fixed;
@@ -283,7 +314,7 @@
     }
     .modal-backdrop.show{display:flex}
     .modal{
-      width:min(760px,100%);
+      width:min(860px,100%);
       max-height:92vh;
       overflow:auto;
       background:#fff;
@@ -346,8 +377,8 @@
     @media (max-width: 900px){.editor-grid.cols-2{grid-template-columns:1fr}}
 
     .choice-grid{display:grid; gap:10px}
-    .choice-row{display:grid; grid-template-columns:1fr 110px auto; gap:8px; align-items:center}
-    @media (max-width: 640px){
+    .choice-row{display:grid; grid-template-columns:1.3fr .55fr .8fr auto; gap:8px; align-items:start}
+    @media (max-width: 760px){
       .choice-row{grid-template-columns:1fr;}
     }
 
@@ -359,17 +390,115 @@
       color:#334155;
       line-height:1.6;
     }
+
+    .accordion details{
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:#fff;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+    .accordion details + details{margin-top:12px}
+    .accordion summary{
+      cursor:pointer;
+      padding:14px 16px;
+      list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-weight:700;
+      color:var(--text);
+    }
+    .accordion summary::-webkit-details-marker{display:none}
+    .accordion summary::after{content:'+'; font-size:20px; color:var(--muted)}
+    .accordion details[open] summary::after{content:'–'}
+    .accordion .accordion-body{padding:0 16px 16px; color:var(--muted); line-height:1.65}
+
+    .hero-minimal{
+      display:grid;
+      gap:var(--gap);
+      grid-template-columns:1.1fr .9fr;
+      align-items:stretch;
+      margin-bottom:var(--gap);
+    }
+    @media (max-width: 900px){.hero-minimal{grid-template-columns:1fr}}
+
+    .main-entry{
+      background:rgba(255,255,255,.88);
+      border:1px solid rgba(219,227,238,.95);
+      border-radius:28px;
+      padding:24px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .main-entry::before{
+      content:"";
+      position:absolute;
+      inset:auto -80px -80px auto;
+      width:220px;height:220px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(29,78,216,.18), transparent 65%);
+      pointer-events:none;
+    }
+    .main-entry h2{margin:0 0 10px; font-size:clamp(28px,4.2vw,44px); line-height:1.1; color:var(--text)}
+    .main-entry p{margin:0 0 18px; color:var(--muted); line-height:1.7; max-width:60ch}
+    .entry-cta{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+
+    .student-box{
+      background:linear-gradient(135deg, rgba(15,23,42,.94), rgba(29,78,216,.92));
+      color:#fff;
+      border-radius:28px;
+      padding:20px;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:100%;
+      position:relative;
+      overflow:hidden;
+    }
+    .student-box::after{
+      content:"";
+      position:absolute;
+      inset:auto -40px -40px auto;
+      width:160px;height:160px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+    }
+    .student-box h3{margin:0 0 8px; font-size:20px; color:#fff}
+    .student-box p{margin:0 0 12px; color:rgba(255,255,255,.86); line-height:1.6}
+    .student-box label{color:#fff}
+    .student-box .input{background:rgba(255,255,255,.96)}
+    .student-box .small{color:rgba(255,255,255,.82)}
+
+    .status-strip{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin-top:8px;
+    }
+    .status-mini{
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:12px;
+    }
   </style>
 </head>
 <body>
+  <div class="bg-layer" id="bgLayer"></div>
+  <div class="bg-overlay"></div>
+
   <div class="app">
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand">
-          <div class="logo">SP</div>
+          <div class="logo" id="logoBox"><span id="logoFallback">SP</span><img id="logoImg" class="hidden" alt="Logo sekolah"></div>
           <div>
-            <h1>Alat Tes Psikologi Internal</h1>
-            <p>SMK PGRI 2 Kediri · responsif untuk desktop & Android</p>
+            <h1 id="brandTitle">Alat Tes Psikologi Internal</h1>
+            <p id="brandSubtitle">SMK PGRI 2 Kediri · responsif untuk desktop, tablet, dan Android</p>
           </div>
         </div>
         <div class="pill-row">
@@ -382,56 +511,67 @@
 
     <main class="container">
       <section id="homeView">
-        <div class="hero">
-          <div class="hero-banner">
-            <h2>Tes Psikologi Internal Sekolah</h2>
+        <div class="hero-minimal">
+          <div class="main-entry">
+            <h2>Masuk sebagai siswa</h2>
             <p>
-              Aplikasi ini dibuat agar siswa dapat mengerjakan tes menggunakan email pribadi, sementara admin dapat mengelola soal dan melihat rekap hasil.
-              Aplikasi ini cocok untuk diunggah ke GitHub Pages sebagai satu file HTML.
+              Gunakan email pribadi siswa agar progres tersimpan. Tampilan dibuat lebih clean, cepat dibuka, dan nyaman diakses dari HP maupun komputer.
             </p>
-            <div class="hero-meta">
-              <span class="meta-badge">Input soal teks / gambar</span>
-              <span class="meta-badge">Simpan progres per email</span>
-              <span class="meta-badge">Rekap ke spreadsheet</span>
-              <span class="meta-badge">Mode super admin & admin</span>
-            </div>
-          </div>
-          <div class="card soft">
-            <div class="section-title">
-              <h3>Masuk sebagai siswa</h3>
-            </div>
-            <div class="field">
-              <label for="studentEmail">Email pribadi siswa</label>
-              <input id="studentEmail" class="input" type="email" placeholder="contoh: nama@domain.com" autocomplete="email" />
-            </div>
-            <div class="row">
-              <button class="btn blue" id="btnStartTest">Lanjutkan Tes</button>
+            <div class="entry-cta">
+              <button class="btn blue" id="btnStartTestMain">Lanjutkan Tes</button>
               <button class="btn outline" id="btnResumeDraft">Lanjutkan Draft</button>
             </div>
-            <p class="small" style="margin-top:10px">Progres disimpan di perangkat ini, dan bisa dikirim ke spreadsheet jika endpoint diset di mode admin.</p>
+            <p class="small" style="margin-top:12px">Menu admin ada di pojok kanan atas. Rekap hasil dapat dikirim ke Google Sheets melalui Apps Script.</p>
+          </div>
+
+          <div class="student-box">
+            <div>
+              <h3>Masukkan email pribadi siswa</h3>
+              <p>Langkah pertama untuk memulai tes dan menyimpan progres.</p>
+              <div class="field">
+                <label for="studentEmail">Email siswa</label>
+                <input id="studentEmail" class="input" type="email" placeholder="contoh: nama@domain.com" autocomplete="email" />
+              </div>
+            </div>
+            <div>
+              <button class="btn primary" id="btnStartTest">Mulai Tes Sekarang</button>
+              <div class="status-strip">
+                <span class="status-mini">Soal teks & gambar</span>
+                <span class="status-mini">Jawaban gambar</span>
+                <span class="status-mini">Cloud spreadsheet</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="grid cols-2">
-          <div class="card">
-            <div class="section-title">
-              <h3>Petunjuk penggunaan</h3>
-            </div>
-            <div class="help-box">
-              <div>1. Siswa mengisi email pribadi lalu memulai tes.</div>
-              <div>2. Admin login untuk menambah, mengubah, atau menghapus soal.</div>
-              <div>3. Hasil tes tersimpan otomatis di browser, dan bisa dikirim ke Google Sheets / spreadsheet lain.</div>
-              <div>4. File ini bisa langsung dijadikan <b>index.html</b> dan dipublish lewat GitHub Pages.</div>
-            </div>
+          <div class="accordion card" style="padding:0">
+            <details>
+              <summary>Petunjuk penggunaan</summary>
+              <div class="accordion-body">
+                <div>1. Siswa memasukkan email lalu menekan tombol mulai.</div>
+                <div>2. Soal bisa berbentuk teks, gambar, atau pilihan jawaban bergambar.</div>
+                <div>3. Super admin dapat menambah, mengubah, dan menghapus soal.</div>
+                <div>4. Admin biasa hanya melihat rekap hasil.</div>
+              </div>
+            </details>
+            <details>
+              <summary>Status aplikasi</summary>
+              <div class="accordion-body" id="statusAccordion">
+                Memuat status...
+              </div>
+            </details>
           </div>
           <div class="card">
             <div class="section-title">
-              <h3>Status aplikasi</h3>
+              <h3>Ringkasan fitur</h3>
             </div>
-            <div id="statusPills"></div>
-            <p class="footer-note">
-              Catatan: login admin di HTML statis cocok untuk penggunaan internal sekolah. Untuk keamanan tinggi, sebaiknya nanti dipindahkan ke backend / Firebase Auth / Google Login.
-            </p>
+            <div class="help-box">
+              <div>• Mode siswa dan mode admin dipisah.</div>
+              <div>• Rekap otomatis disiapkan untuk Google Sheets.</div>
+              <div>• Branding sekolah bisa diubah dari menu super admin.</div>
+              <div>• Layout dibuat responsif untuk berbagai layar.</div>
+            </div>
           </div>
         </div>
       </section>
@@ -454,23 +594,6 @@
             <button class="btn outline" id="btnPrevQ">Sebelumnya</button>
             <button class="btn blue" id="btnNextQ">Selanjutnya</button>
             <button class="btn success" id="btnFinishTest">Selesai & Kirim</button>
-            const resultData = {
-  email: email,
-  score: totalScore,
-  answers: state.answers
-};
-
-// simpan lokal
-state.results.push({
-  time: nowText(),
-  email,
-  score: totalScore,
-  summary: "Tersimpan"
-});
-saveAll();
-
-// kirim ke Google Sheets
-sendToSheet(resultData);
           </div>
         </div>
       </section>
@@ -526,21 +649,62 @@ sendToSheet(resultData);
 
             <div id="adminSettingsTab" class="hidden">
               <div class="section-title">
-                <h3>Pengaturan spreadsheet</h3>
+                <h3>Pengaturan spreadsheet & branding</h3>
               </div>
               <div class="help-box" style="margin-bottom:12px">
-                Tempel URL Google Apps Script Web App atau endpoint spreadsheet Anda di bawah ini. Saat tes selesai, aplikasi akan mengirim hasil ke URL tersebut dalam format JSON.
+                Tempel endpoint Google Apps Script Web App di bawah ini agar hasil tes masuk ke Google Sheets. Super admin juga bisa mengganti logo, header, warna, dan background sekolah.
               </div>
+
               <div class="field">
                 <label for="sheetEndpoint">Spreadsheet endpoint URL</label>
                 <input id="sheetEndpoint" class="input" type="url" placeholder="https://script.google.com/macros/s/.../exec" />
               </div>
-              <div class="row">
+
+              <div class="grid cols-2" style="margin-top:14px">
+                <div class="field">
+                  <label for="brandingTitle">Judul header</label>
+                  <input id="brandingTitle" class="input" type="text" placeholder="Alat Tes Psikologi Internal" />
+                </div>
+                <div class="field">
+                  <label for="brandingSubtitle">Subjudul header</label>
+                  <input id="brandingSubtitle" class="input" type="text" placeholder="SMK PGRI 2 Kediri" />
+                </div>
+                <div class="field">
+                  <label for="brandingLogoFile">Logo sekolah (gambar)</label>
+                  <input id="brandingLogoFile" class="input" type="file" accept="image/*" />
+                </div>
+                <div class="field">
+                  <label for="brandingBackgroundFile">Background (gambar opsional)</label>
+                  <input id="brandingBackgroundFile" class="input" type="file" accept="image/*" />
+                </div>
+                <div class="field">
+                  <label for="primaryColor">Warna utama</label>
+                  <input id="primaryColor" class="input" type="color" value="#0f3a66" />
+                </div>
+                <div class="field">
+                  <label for="textColor">Warna tulisan</label>
+                  <input id="textColor" class="input" type="color" value="#0f172a" />
+                </div>
+                <div class="field">
+                  <label for="bgColor">Warna latar</label>
+                  <input id="bgColor" class="input" type="color" value="#f4f7fb" />
+                </div>
+                <div class="field">
+                  <label for="heroColor">Warna banner</label>
+                  <input id="heroColor" class="input" type="color" value="#1d4ed8" />
+                </div>
+              </div>
+              <div class="help-box">
+                Rekomendasi resolusi: logo 512×512 px atau lebih besar dengan rasio 1:1, background horizontal 1600×900 px atau lebih besar, dan gambar soal/jawaban minimal 800 px agar tetap tajam di HP.
+              </div>
+
+              <div class="row" style="margin-top:12px">
                 <button class="btn blue" id="btnSaveSettings">Simpan Pengaturan</button>
+                <button class="btn outline" id="btnResetBranding">Reset Branding</button>
                 <button class="btn outline" id="btnTestEndpoint">Tes Endpoint</button>
               </div>
               <p class="footer-note" style="margin-top:12px">
-                Gunakan Google Sheets + Apps Script supaya rekap bisa benar-benar tersimpan ke cloud.
+                Gunakan Google Sheets + Apps Script supaya rekap benar-benar tersimpan ke cloud.
               </p>
             </div>
           </div>
@@ -558,7 +722,7 @@ sendToSheet(resultData);
               <div>Email: admin</div>
               <div>Password: bksmkngrida2026</div>
               <hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0">
-              <div>Super admin bisa tambah / edit / hapus soal. Admin biasa hanya melihat rekap hasil.</div>
+              <div>Super admin bisa menambah, mengedit, dan menghapus soal. Admin biasa hanya melihat rekap hasil.</div>
             </div>
           </div>
         </div>
@@ -614,7 +778,7 @@ sendToSheet(resultData);
           <input id="qImageFile" class="input" type="file" accept="image/*" />
         </div>
         <div class="field" style="grid-column:1/-1">
-          <label for="qImageUrl">Atau URL gambar (opsional)</label>
+          <label for="qImageUrl">Atau URL gambar soal (opsional)</label>
           <input id="qImageUrl" class="input" type="url" placeholder="https://..." />
         </div>
       </div>
@@ -625,11 +789,11 @@ sendToSheet(resultData);
           <button class="btn outline small" id="btnAddOption">Tambah Opsi</button>
         </div>
         <div class="choice-grid" id="optionEditor"></div>
-        <p class="footer-note">Untuk tiap opsi, isi teks dan bobot skor. Bobot bisa 0, 1, 2, dst.</p>
+        <p class="footer-note">Setiap opsi bisa berisi teks, skor, dan gambar jawaban. Ini cocok untuk soal bergambar seperti pilihan a, b, c, d berupa gambar.</p>
       </div>
 
       <div id="textEditor" class="hidden" style="margin-top:8px">
-        <div class="help-box">Soal isian hanya menyimpan jawaban siswa. Cocok untuk pertanyaan reflektif atau deskriptif.</div>
+        <div class="help-box">Soal isian hanya menyimpan jawaban siswa sebagai teks.</div>
       </div>
 
       <div class="row" style="margin-top:16px">
@@ -647,10 +811,23 @@ sendToSheet(resultData);
       adminSession: 'sp_psikologi_admin_session_v1'
     };
 
+    const DEFAULT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyOaNrHdIgJA8pxXSQyQ0pzdTNEAXeSAtAEP9_ZpTKflXFk_jZeUFXjpUIiLCWT061s/exec';
+
     const ADMIN_CREDENTIALS = [
       { email: 'yuliaratri17@smkpgri2kdr.sch.id', password: 'rayarvian20', role: 'superadmin', label: 'Super Admin' },
       { email: 'admin', password: 'bksmkngrida2026', role: 'admin', label: 'Admin Biasa' }
     ];
+
+    const DEFAULT_BRANDING = {
+      title: 'Alat Tes Psikologi Internal',
+      subtitle: 'SMK PGRI 2 Kediri · responsif untuk desktop, tablet, dan Android',
+      logoData: '',
+      backgroundData: '',
+      primaryColor: '#0f3a66',
+      textColor: '#0f172a',
+      bgColor: '#f4f7fb',
+      heroColor: '#1d4ed8'
+    };
 
     const state = {
       currentView: 'home',
@@ -663,7 +840,8 @@ sendToSheet(resultData);
       testIndex: 0,
       answers: {},
       editingQuestionId: null,
-      pendingImageData: null
+      pendingImageData: null,
+      pendingOptionImages: {}
     };
 
     const el = (id) => document.getElementById(id);
@@ -682,28 +860,15 @@ sendToSheet(resultData);
       return new Date().toLocaleString('id-ID', { dateStyle:'medium', timeStyle:'short' });
     }
 
+    function safeParse(value, fallback){
+      try { return value ? JSON.parse(value) : fallback; } catch { return fallback; }
+    }
+
     function saveAll(){
       localStorage.setItem(STORAGE_KEYS.questions, JSON.stringify(state.questions));
       localStorage.setItem(STORAGE_KEYS.results, JSON.stringify(state.results));
       localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(state.settings));
-      if (state.admin) {
-        localStorage.setItem(STORAGE_KEYS.adminSession, JSON.stringify(state.admin));
-      }
-    }
-
-    function loadAll(){
-      state.questions = safeParse(localStorage.getItem(STORAGE_KEYS.questions), []);
-      state.results = safeParse(localStorage.getItem(STORAGE_KEYS.results), []);
-      state.settings = safeParse(localStorage.getItem(STORAGE_KEYS.settings), {});
-      state.admin = safeParse(localStorage.getItem(STORAGE_KEYS.adminSession), null);
-      if (!Array.isArray(state.questions) || !state.questions.length) {
-        state.questions = seedQuestions();
-        localStorage.setItem(STORAGE_KEYS.questions, JSON.stringify(state.questions));
-      }
-    }
-
-    function safeParse(value, fallback){
-      try { return value ? JSON.parse(value) : fallback; } catch { return fallback; }
+      if (state.admin) localStorage.setItem(STORAGE_KEYS.adminSession, JSON.stringify(state.admin));
     }
 
     function seedQuestions(){
@@ -714,10 +879,10 @@ sendToSheet(resultData);
           prompt: 'Saya merasa mudah bergaul dengan teman baru.',
           image: '',
           options: [
-            { text: 'Sangat tidak setuju', score: 0 },
-            { text: 'Tidak setuju', score: 1 },
-            { text: 'Setuju', score: 2 },
-            { text: 'Sangat setuju', score: 3 }
+            { text: 'Sangat tidak setuju', score: 0, image: '' },
+            { text: 'Tidak setuju', score: 1, image: '' },
+            { text: 'Setuju', score: 2, image: '' },
+            { text: 'Sangat setuju', score: 3, image: '' }
           ]
         },
         {
@@ -728,6 +893,18 @@ sendToSheet(resultData);
           options: []
         }
       ];
+    }
+
+    function loadAll(){
+      state.questions = safeParse(localStorage.getItem(STORAGE_KEYS.questions), []);
+      state.results = safeParse(localStorage.getItem(STORAGE_KEYS.results), []);
+      state.settings = Object.assign({}, DEFAULT_BRANDING, safeParse(localStorage.getItem(STORAGE_KEYS.settings), {}));
+      if (!state.settings.sheetEndpoint) state.settings.sheetEndpoint = DEFAULT_ENDPOINT;
+      state.admin = safeParse(localStorage.getItem(STORAGE_KEYS.adminSession), null);
+      if (!Array.isArray(state.questions) || !state.questions.length) {
+        state.questions = seedQuestions();
+        localStorage.setItem(STORAGE_KEYS.questions, JSON.stringify(state.questions));
+      }
     }
 
     function toast(message){
@@ -749,16 +926,42 @@ sendToSheet(resultData);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    function applyBranding(){
+      const branding = Object.assign({}, DEFAULT_BRANDING, state.settings || {});
+      document.documentElement.style.setProperty('--primary', branding.primaryColor || DEFAULT_BRANDING.primaryColor);
+      document.documentElement.style.setProperty('--primary-2', branding.heroColor || DEFAULT_BRANDING.heroColor);
+      document.documentElement.style.setProperty('--text', branding.textColor || DEFAULT_BRANDING.textColor);
+      document.documentElement.style.setProperty('--bg', branding.bgColor || DEFAULT_BRANDING.bgColor);
+      el('brandTitle').textContent = branding.title || DEFAULT_BRANDING.title;
+      el('brandSubtitle').textContent = branding.subtitle || DEFAULT_BRANDING.subtitle;
+      const bgLayer = el('bgLayer');
+      if (branding.backgroundData) {
+        bgLayer.style.backgroundImage = `linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.68)), url('${branding.backgroundData}')`;
+      } else {
+        bgLayer.style.backgroundImage = 'linear-gradient(180deg,#eef4ff 0%, #f7fafc 40%, #f4f7fb 100%)';
+      }
+      if (branding.logoData) {
+        el('logoImg').src = branding.logoData;
+        el('logoImg').classList.remove('hidden');
+        el('logoFallback').classList.add('hidden');
+      } else {
+        el('logoImg').classList.add('hidden');
+        el('logoFallback').classList.remove('hidden');
+        el('logoFallback').textContent = (branding.title || 'SP').split(' ').map(x => x[0]).slice(0,2).join('').toUpperCase();
+      }
+    }
+
     function renderStatus(){
-      const box = el('statusPills');
       const adminText = state.admin ? `Login admin aktif: ${state.admin.label}` : 'Belum login admin';
       const sheetText = state.settings.sheetEndpoint ? 'Spreadsheet endpoint tersambung' : 'Spreadsheet endpoint belum diisi';
-      box.innerHTML = `
-        <span class="badge">${escapeHtml(adminText)}</span>
-        <span class="badge">${escapeHtml(sheetText)}</span>
-        <span class="badge">${state.questions.length} soal tersimpan</span>
-        <span class="badge">${state.results.length} hasil rekap</span>
-      `;
+      const str = [
+        adminText,
+        sheetText,
+        `${state.questions.length} soal tersimpan`,
+        `${state.results.length} hasil rekap`
+      ].map(x => `<span class="badge">${escapeHtml(x)}</span>`).join('');
+      const accordion = el('statusAccordion');
+      if (accordion) accordion.innerHTML = str;
     }
 
     function openLogin(){
@@ -776,10 +979,7 @@ sendToSheet(resultData);
       const email = el('adminEmail').value.trim();
       const password = el('adminPassword').value;
       const found = ADMIN_CREDENTIALS.find(a => a.email === email && a.password === password);
-      if (!found) {
-        toast('Login gagal. Cek email dan password admin.');
-        return;
-      }
+      if (!found) { toast('Login gagal. Cek email dan password admin.'); return; }
       state.admin = { email: found.email, role: found.role, label: found.label };
       saveAll();
       closeLogin();
@@ -788,18 +988,15 @@ sendToSheet(resultData);
       setView('admin');
     }
 
-    function requireAdmin(){
-      if (!state.admin) {
-        toast('Silakan login admin terlebih dahulu.');
-        openLogin();
-        return false;
-      }
-      return true;
-    }
-
     function renderAdmin(){
       el('adminRoleLabel').textContent = `Peran: ${state.admin ? state.admin.label : '-'}`;
-      el('sheetEndpoint').value = state.settings.sheetEndpoint || '';
+      el('sheetEndpoint').value = state.settings.sheetEndpoint || DEFAULT_ENDPOINT;
+      el('brandingTitle').value = state.settings.title || DEFAULT_BRANDING.title;
+      el('brandingSubtitle').value = state.settings.subtitle || DEFAULT_BRANDING.subtitle;
+      el('primaryColor').value = state.settings.primaryColor || DEFAULT_BRANDING.primaryColor;
+      el('textColor').value = state.settings.textColor || DEFAULT_BRANDING.textColor;
+      el('bgColor').value = state.settings.bgColor || DEFAULT_BRANDING.bgColor;
+      el('heroColor').value = state.settings.heroColor || DEFAULT_BRANDING.heroColor;
       renderTabs();
       renderQuestions();
       renderResults();
@@ -839,7 +1036,15 @@ sendToSheet(resultData);
           ${q.image ? `<img class="q-image" src="${q.image}" alt="Gambar soal">` : ''}
           ${q.type === 'mcq' ? `
             <div class="option-list">
-              ${q.options.map(opt => `<div class="option"><span>${escapeHtml(opt.text)}</span><span class="score">Skor ${Number(opt.score || 0)}</span></div>`).join('')}
+              ${q.options.map(opt => `
+                <div class="option">
+                  <div style="width:100%">
+                    <div>${escapeHtml(opt.text)}</div>
+                    ${opt.image ? `<img class="answer-thumb" src="${opt.image}" alt="Gambar jawaban">` : ''}
+                  </div>
+                  <span class="score">Skor ${Number(opt.score || 0)}</span>
+                </div>
+              `).join('')}
             </div>
           ` : '<div class="small">Jawaban siswa akan disimpan sebagai teks.</div>'}
         </div>
@@ -861,6 +1066,35 @@ sendToSheet(resultData);
           <td>${escapeHtml(r.summary || '')}</td>
         </tr>
       `).join('');
+    }
+
+    function getStudentEmail(){
+      return (el('studentEmail').value || state.draftEmail || '').trim();
+    }
+
+    function draftKey(email){ return `${STORAGE_KEYS.drafts}_${email.toLowerCase()}`; }
+
+    function saveDraftOnly(){
+      const email = getStudentEmail();
+      if (!email || !email.includes('@')) return;
+      localStorage.setItem(draftKey(email), JSON.stringify({
+        email,
+        index: state.testIndex,
+        answers: state.answers,
+        updatedAt: new Date().toISOString()
+      }));
+    }
+
+    function startTest(resume=false){
+      const email = getStudentEmail();
+      if (!email || !email.includes('@')) { toast('Masukkan email pribadi siswa yang valid.'); el('studentEmail').focus(); return; }
+      state.draftEmail = email;
+      const draft = safeParse(localStorage.getItem(draftKey(email)), null);
+      state.answers = draft?.answers || {};
+      state.testIndex = resume && draft ? draft.index || 0 : 0;
+      if (state.questions.length === 0) { toast('Belum ada soal.'); return; }
+      setView('test');
+      toast(resume && draft ? 'Draft berhasil dibuka.' : 'Tes dimulai.');
     }
 
     function renderQuestion(){
@@ -896,9 +1130,14 @@ sendToSheet(resultData);
               return `
                 <div class="option ${selected ? 'selected' : ''}">
                   <label>
-                    <span>
-                      <input type="radio" name="answer_${q.id}" value="${idx}" ${selected ? 'checked' : ''} onchange="saveAnswer('${q.id}', this.value)"> 
-                      ${escapeHtml(opt.text)}
+                    <span style="display:block; width:100%">
+                      <span style="display:flex; gap:10px; align-items:flex-start; width:100%">
+                        <input type="radio" name="answer_${q.id}" value="${idx}" ${selected ? 'checked' : ''} onchange="saveAnswer('${q.id}', this.value)">
+                        <span style="display:block">
+                          <span>${escapeHtml(opt.text)}</span>
+                          ${opt.image ? `<img class="option-image" src="${opt.image}" alt="Jawaban bergambar">` : ''}
+                        </span>
+                      </span>
                     </span>
                     <span class="score">Skor ${Number(opt.score || 0)}</span>
                   </label>
@@ -928,45 +1167,9 @@ sendToSheet(resultData);
       el('btnNextQ').disabled = state.testIndex >= state.questions.length - 1;
     }
 
-    function getStudentEmail(){
-      return (el('studentEmail').value || state.draftEmail || '').trim();
-    }
-
-    function startTest(resume=false){
-      const email = getStudentEmail();
-      if (!email || !email.includes('@')) {
-        toast('Masukkan email pribadi siswa yang valid.');
-        el('studentEmail').focus();
-        return;
-      }
-      state.draftEmail = email;
-      const draft = safeParse(localStorage.getItem(draftKey(email)), null);
-      state.answers = draft?.answers || {};
-      state.testIndex = resume && draft ? draft.index || 0 : 0;
-      if (state.questions.length === 0) {
-        toast('Belum ada soal.');
-        return;
-      }
-      setView('test');
-      toast(resume && draft ? 'Draft berhasil dibuka.' : 'Tes dimulai.');
-    }
-
-    function draftKey(email){ return `${STORAGE_KEYS.drafts}_${email.toLowerCase()}`; }
-
     function saveAnswer(questionId, value){
       state.answers[questionId] = value;
       saveDraftOnly();
-    }
-
-    function saveDraftOnly(){
-      const email = getStudentEmail();
-      if (!email || !email.includes('@')) return;
-      localStorage.setItem(draftKey(email), JSON.stringify({
-        email,
-        index: state.testIndex,
-        answers: state.answers,
-        updatedAt: new Date().toISOString()
-      }));
     }
 
     function collectTestData(){
@@ -991,16 +1194,28 @@ sendToSheet(resultData);
       return { email, score: totalScore, summary: summaryParts.join(' | ') };
     }
 
+    async function trySendToSpreadsheet(record){
+      const endpoint = (state.settings.sheetEndpoint || DEFAULT_ENDPOINT || '').trim();
+      if (!endpoint) return;
+      try {
+        await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            source: 'SMK PGRI 2 Kediri Psychological Test',
+            type: 'result',
+            record
+          })
+        });
+      } catch (err) {
+        console.warn('Gagal mengirim ke spreadsheet:', err);
+      }
+    }
+
     async function submitTest(){
       const email = getStudentEmail();
-      if (!email || !email.includes('@')) {
-        toast('Email siswa tidak valid.');
-        return;
-      }
-      if (!state.questions.length) {
-        toast('Tidak ada soal untuk dikirim.');
-        return;
-      }
+      if (!email || !email.includes('@')) { toast('Email siswa tidak valid.'); return; }
+      if (!state.questions.length) { toast('Tidak ada soal untuk dikirim.'); return; }
       const data = collectTestData();
       const record = {
         time: nowText(),
@@ -1020,25 +1235,6 @@ sendToSheet(resultData);
       setView('home');
     }
 
-    async function sendToSheet(data) {
-  const url = state.settings.sheetEndpoint;
-  if (!url) return;
-
-  try {
-    await fetch(url, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    console.log("Berhasil kirim ke spreadsheet");
-  } catch (err) {
-    console.error("Gagal kirim:", err);
-  }
-}
-
     function editQuestion(id){
       if (state.admin?.role !== 'superadmin') return;
       const q = state.questions.find(x => x.id === id);
@@ -1051,7 +1247,7 @@ sendToSheet(resultData);
       state.pendingImageData = q.image && q.image.startsWith('data:') ? q.image : null;
       el('mcqEditor').classList.toggle('hidden', q.type !== 'mcq');
       el('textEditor').classList.toggle('hidden', q.type !== 'text');
-      renderOptionEditor(q.options || [{ text:'', score:0 }]);
+      renderOptionEditor(q.options || [{ text:'', score:0, image:'' }]);
       el('questionModalBackdrop').classList.add('show');
     }
 
@@ -1066,12 +1262,10 @@ sendToSheet(resultData);
     }
 
     function openQuestionModal(){
-      if (state.admin?.role !== 'superadmin') {
-        toast('Hanya super admin yang bisa menambah / mengedit soal.');
-        return;
-      }
+      if (state.admin?.role !== 'superadmin') { toast('Hanya super admin yang bisa menambah / mengedit soal.'); return; }
       state.editingQuestionId = null;
       state.pendingImageData = null;
+      state.pendingOptionImages = {};
       el('questionModalTitle').textContent = 'Tambah Soal';
       el('qPrompt').value = '';
       el('qType').value = 'mcq';
@@ -1080,10 +1274,10 @@ sendToSheet(resultData);
       el('mcqEditor').classList.remove('hidden');
       el('textEditor').classList.add('hidden');
       renderOptionEditor([
-        { text:'', score:0 },
-        { text:'', score:1 },
-        { text:'', score:2 },
-        { text:'', score:3 }
+        { text:'', score:0, image:'' },
+        { text:'', score:1, image:'' },
+        { text:'', score:2, image:'' },
+        { text:'', score:3, image:'' }
       ]);
       el('questionModalBackdrop').classList.add('show');
     }
@@ -1094,22 +1288,30 @@ sendToSheet(resultData);
 
     function renderOptionEditor(options){
       const host = el('optionEditor');
-      const arr = options && options.length ? options : [{ text:'', score:0 }];
+      const arr = options && options.length ? options : [{ text:'', score:0, image:'' }];
       host.innerHTML = arr.map((opt, idx) => `
         <div class="choice-row" data-idx="${idx}">
-          <input class="input opt-text" placeholder="Teks opsi ${idx+1}" value="${escapeHtml(opt.text || '')}">
-          <input class="input opt-score" type="number" min="0" step="1" placeholder="Skor" value="${Number(opt.score || 0)}">
-          <button class="btn danger small" type="button" onclick="removeOptionRow(this)">Hapus</button>
+          <div class="field" style="margin:0">
+            <label>Teks opsi ${idx+1}</label>
+            <input class="input opt-text" placeholder="Teks opsi ${idx+1}" value="${escapeHtml(opt.text || '')}">
+          </div>
+          <div class="field" style="margin:0">
+            <label>Skor</label>
+            <input class="input opt-score" type="number" min="0" step="1" placeholder="Skor" value="${Number(opt.score || 0)}">
+          </div>
+          <div class="field" style="margin:0">
+            <label>Gambar jawaban</label>
+            <input class="input opt-image-url" type="url" placeholder="URL gambar (opsional)" value="${escapeHtml(opt.image && opt.image.startsWith('http') ? opt.image : '')}">
+            <input class="input opt-image-file" type="file" accept="image/*" onchange="handleOptionImageFile(this)">
+            <input type="hidden" class="opt-image-data" value="${escapeHtml(opt.image && opt.image.startsWith('data:') ? opt.image : '')}">
+            ${opt.image ? `<img class="answer-thumb" src="${opt.image}" alt="Preview gambar jawaban">` : ''}
+          </div>
+          <div class="field" style="margin:0">
+            <label>Aksi</label>
+            <button class="btn danger small" type="button" onclick="removeOptionRow(this)">Hapus</button>
+          </div>
         </div>
       `).join('');
-    }
-
-    function gatherOptions(){
-      const rows = [...document.querySelectorAll('#optionEditor .choice-row')];
-      return rows.map(row => ({
-        text: row.querySelector('.opt-text').value.trim(),
-        score: Number(row.querySelector('.opt-score').value || 0)
-      })).filter(x => x.text);
     }
 
     function removeOptionRow(btn){
@@ -1117,15 +1319,50 @@ sendToSheet(resultData);
     }
     window.removeOptionRow = removeOptionRow;
 
+    async function handleOptionImageFile(input){
+      const file = input.files && input.files[0];
+      const row = input.closest('.choice-row');
+      const preview = row.querySelector('.answer-thumb');
+      if (!file || !row) return;
+      const data = await fileToDataUrl(file);
+      row.querySelector('.opt-image-data').value = data;
+      row.querySelector('.opt-image-url').value = '';
+      if (preview) {
+        preview.src = data;
+      } else {
+        const img = document.createElement('img');
+        img.className = 'answer-thumb';
+        img.src = data;
+        img.alt = 'Preview gambar jawaban';
+        row.querySelector('.field:nth-child(3)').appendChild(img);
+      }
+    }
+    window.handleOptionImageFile = handleOptionImageFile;
+
     function addOptionRow(){
       const host = el('optionEditor');
       const idx = host.querySelectorAll('.choice-row').length + 1;
       const div = document.createElement('div');
       div.className = 'choice-row';
       div.innerHTML = `
-        <input class="input opt-text" placeholder="Teks opsi ${idx}">
-        <input class="input opt-score" type="number" min="0" step="1" placeholder="Skor" value="0">
-        <button class="btn danger small" type="button" onclick="removeOptionRow(this)">Hapus</button>
+        <div class="field" style="margin:0">
+          <label>Teks opsi ${idx}</label>
+          <input class="input opt-text" placeholder="Teks opsi ${idx}">
+        </div>
+        <div class="field" style="margin:0">
+          <label>Skor</label>
+          <input class="input opt-score" type="number" min="0" step="1" placeholder="Skor" value="0">
+        </div>
+        <div class="field" style="margin:0">
+          <label>Gambar jawaban</label>
+          <input class="input opt-image-url" type="url" placeholder="URL gambar (opsional)">
+          <input class="input opt-image-file" type="file" accept="image/*" onchange="handleOptionImageFile(this)">
+          <input type="hidden" class="opt-image-data" value="">
+        </div>
+        <div class="field" style="margin:0">
+          <label>Aksi</label>
+          <button class="btn danger small" type="button" onclick="removeOptionRow(this)">Hapus</button>
+        </div>
       `;
       host.appendChild(div);
     }
@@ -1134,14 +1371,11 @@ sendToSheet(resultData);
       if (state.admin?.role !== 'superadmin') return;
       const prompt = el('qPrompt').value.trim();
       const type = el('qType').value;
-      if (!prompt) {
-        toast('Teks soal belum diisi.');
-        return;
-      }
+      if (!prompt) { toast('Teks soal belum diisi.'); return; }
+
       let image = state.pendingImageData || el('qImageUrl').value.trim();
-      if (el('qImageFile').files && el('qImageFile').files[0]) {
-        image = await fileToDataUrl(el('qImageFile').files[0]);
-      }
+      if (el('qImageFile').files && el('qImageFile').files[0]) image = await fileToDataUrl(el('qImageFile').files[0]);
+
       const question = {
         id: state.editingQuestionId || uid(),
         type,
@@ -1149,21 +1383,30 @@ sendToSheet(resultData);
         image,
         options: type === 'mcq' ? gatherOptions() : []
       };
-      if (type === 'mcq' && question.options.length < 2) {
-        toast('Pilihan ganda minimal 2 opsi.');
-        return;
-      }
+      if (type === 'mcq' && question.options.length < 2) { toast('Pilihan ganda minimal 2 opsi.'); return; }
+      if (type === 'mcq' && question.options.some(o => !o.text)) { toast('Semua opsi harus memiliki teks atau gambar yang jelas.'); }
       if (state.editingQuestionId) {
         state.questions = state.questions.map(q => q.id === state.editingQuestionId ? question : q);
       } else {
         state.questions.push(question);
       }
-      state.questions = state.questions;
       saveAll();
       renderQuestions();
       renderStatus();
       closeQuestionModal();
       toast('Soal berhasil disimpan.');
+    }
+
+    function gatherOptions(){
+      const rows = [...document.querySelectorAll('#optionEditor .choice-row')];
+      return rows.map(row => {
+        const text = row.querySelector('.opt-text').value.trim();
+        const score = Number(row.querySelector('.opt-score').value || 0);
+        const url = row.querySelector('.opt-image-url').value.trim();
+        const data = row.querySelector('.opt-image-data').value.trim();
+        const image = data || url;
+        return { text, score, image };
+      }).filter(x => x.text || x.image);
     }
 
     function fileToDataUrl(file){
@@ -1176,10 +1419,7 @@ sendToSheet(resultData);
     }
 
     function exportCSV(){
-      if (!state.results.length) {
-        toast('Belum ada data untuk diekspor.');
-        return;
-      }
+      if (!state.results.length) { toast('Belum ada data untuk diekspor.'); return; }
       const headers = ['time','email','score','summary'];
       const rows = state.results.map(r => headers.map(h => csvCell(r[h])).join(','));
       const csv = [headers.join(','), ...rows].join('\n');
@@ -1204,10 +1444,7 @@ sendToSheet(resultData);
     }
 
     async function syncResults(){
-      if (!state.settings.sheetEndpoint) {
-        toast('Isi spreadsheet endpoint dulu.');
-        return;
-      }
+      if (!state.settings.sheetEndpoint) { toast('Isi spreadsheet endpoint dulu.'); return; }
       const ok = await sendBulkToSpreadsheet();
       toast(ok ? 'Data dikirim ulang ke spreadsheet.' : 'Gagal mengirim ke spreadsheet.');
     }
@@ -1232,10 +1469,7 @@ sendToSheet(resultData);
     }
 
     async function testEndpoint(){
-      if (!state.settings.sheetEndpoint) {
-        toast('Masukkan URL endpoint terlebih dahulu.');
-        return;
-      }
+      if (!state.settings.sheetEndpoint) { toast('Masukkan URL endpoint terlebih dahulu.'); return; }
       try {
         const res = await fetch(state.settings.sheetEndpoint, {
           method: 'POST',
@@ -1249,10 +1483,32 @@ sendToSheet(resultData);
     }
 
     function saveSettings(){
-      state.settings.sheetEndpoint = el('sheetEndpoint').value.trim();
+      state.settings.sheetEndpoint = el('sheetEndpoint').value.trim() || DEFAULT_ENDPOINT;
+      state.settings.title = el('brandingTitle').value.trim() || DEFAULT_BRANDING.title;
+      state.settings.subtitle = el('brandingSubtitle').value.trim() || DEFAULT_BRANDING.subtitle;
+      state.settings.primaryColor = el('primaryColor').value || DEFAULT_BRANDING.primaryColor;
+      state.settings.textColor = el('textColor').value || DEFAULT_BRANDING.textColor;
+      state.settings.bgColor = el('bgColor').value || DEFAULT_BRANDING.bgColor;
+      state.settings.heroColor = el('heroColor').value || DEFAULT_BRANDING.heroColor;
       saveAll();
+      applyBranding();
       renderStatus();
       toast('Pengaturan disimpan.');
+    }
+
+    function resetBranding(){
+      state.settings.title = DEFAULT_BRANDING.title;
+      state.settings.subtitle = DEFAULT_BRANDING.subtitle;
+      state.settings.logoData = '';
+      state.settings.backgroundData = '';
+      state.settings.primaryColor = DEFAULT_BRANDING.primaryColor;
+      state.settings.textColor = DEFAULT_BRANDING.textColor;
+      state.settings.bgColor = DEFAULT_BRANDING.bgColor;
+      state.settings.heroColor = DEFAULT_BRANDING.heroColor;
+      saveAll();
+      applyBranding();
+      renderAdmin();
+      toast('Branding direset.');
     }
 
     function logoutAdmin(){
@@ -1265,15 +1521,9 @@ sendToSheet(resultData);
 
     function restoreDraftIfAny(){
       const email = el('studentEmail').value.trim();
-      if (!email) {
-        toast('Masukkan email siswa dulu.');
-        return;
-      }
+      if (!email) { toast('Masukkan email siswa dulu.'); return; }
       const draft = safeParse(localStorage.getItem(draftKey(email)), null);
-      if (!draft) {
-        toast('Belum ada draft tersimpan untuk email ini.');
-        return;
-      }
+      if (!draft) { toast('Belum ada draft tersimpan untuk email ini.'); return; }
       state.draftEmail = email;
       state.answers = draft.answers || {};
       state.testIndex = draft.index || 0;
@@ -1292,6 +1542,16 @@ sendToSheet(resultData);
       renderQuestion();
     }
 
+    async function handleBrandingFile(input, target){
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const data = await fileToDataUrl(file);
+      state.settings[target] = data;
+      saveAll();
+      applyBranding();
+      toast(target === 'logoData' ? 'Logo diperbarui.' : 'Background diperbarui.');
+    }
+
     function bindEvents(){
       el('btnOpenAdminLogin').addEventListener('click', openLogin);
       el('btnCloseLogin').addEventListener('click', closeLogin);
@@ -1303,14 +1563,22 @@ sendToSheet(resultData);
       el('btnBackHome2').addEventListener('click', () => setView('home'));
       el('btnOpenStudent').addEventListener('click', () => {
         const email = el('studentEmail').value.trim();
-        if (email) { startTest(false); } else { el('studentEmail').focus(); toast('Isi email siswa dulu.'); }
+        if (email) startTest(false); else { el('studentEmail').focus(); toast('Isi email siswa dulu.'); }
       });
       el('btnStartTest').addEventListener('click', () => startTest(false));
+      el('btnStartTestMain').addEventListener('click', () => startTest(false));
       el('btnResumeDraft').addEventListener('click', restoreDraftIfAny);
       el('btnSaveDraft').addEventListener('click', () => { saveDraftOnly(); toast('Progres disimpan.'); });
       el('btnPrevQ').addEventListener('click', () => goQuestion(-1));
       el('btnNextQ').addEventListener('click', () => goQuestion(1));
-      el('btnFinishTest').addEventListener('click', submitTest);
+      el('btnFinishTest').addEventListener('click', () => {
+        const q = state.questions[state.testIndex];
+        if (q && q.type === 'text') {
+          const ta = el('textAnswer');
+          if (ta) state.answers[q.id] = ta.value;
+        }
+        submitTest();
+      });
 
       el('btnAddQuestion').addEventListener('click', openQuestionModal);
       el('btnCloseQuestionModal').addEventListener('click', closeQuestionModal);
@@ -1324,7 +1592,10 @@ sendToSheet(resultData);
         el('textEditor').classList.toggle('hidden', type !== 'text');
       });
 
+      el('brandingLogoFile').addEventListener('change', (e) => handleBrandingFile(e.target, 'logoData'));
+      el('brandingBackgroundFile').addEventListener('change', (e) => handleBrandingFile(e.target, 'backgroundData'));
       el('btnSaveSettings').addEventListener('click', saveSettings);
+      el('btnResetBranding').addEventListener('click', resetBranding);
       el('btnTestEndpoint').addEventListener('click', testEndpoint);
       el('btnSyncNow').addEventListener('click', syncResults);
       el('btnExportCSV').addEventListener('click', exportCSV);
@@ -1341,14 +1612,15 @@ sendToSheet(resultData);
     window.editQuestion = editQuestion;
     window.deleteQuestion = deleteQuestion;
     window.saveAnswer = saveAnswer;
+    window.handleOptionImageFile = handleOptionImageFile;
+    window.removeOptionRow = removeOptionRow;
 
     function init(){
       loadAll();
       bindEvents();
+      applyBranding();
       renderStatus();
-      if (state.admin) {
-        el('adminRoleLabel').textContent = `Peran: ${state.admin.label}`;
-      }
+      if (state.admin) el('adminRoleLabel').textContent = `Peran: ${state.admin.label}`;
       setView('home');
     }
 

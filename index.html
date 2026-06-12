@@ -376,8 +376,53 @@
     const STORAGE_KEYS={questions:'sp_psikologi_questions_v2',results:'sp_psikologi_results_v2',settings:'sp_psikologi_settings_v2',drafts:'sp_psikologi_drafts_v2',adminSession:'sp_psikologi_admin_session_v2'};
     const DEFAULT_ENDPOINT='https://script.google.com/macros/s/AKfycbyOaNrHdIgJA8pxXSQyQ0pzdTNEAXeSAtAEP9_ZpTKflXFk_jZeUFXjpUIiLCWT061s/exec';
     const ADMIN_CREDENTIALS=[{email:'bksmkpgri2@gmail.com',password:'rayarvian2',role:'superadmin',label:'Super Admin'},{email:'admin',password:'bkgrida2026',role:'admin',label:'Admin Biasa'}];
-    const DEFAULT_CONFIG={branding:{title:'Alat Tes Psikologi Internal',subtitle:'SMK PGRI 2 Kediri · responsif untuk desktop, tablet, dan Android',logoData:'',backgroundData:'',primaryColor:'#0f3a66',textColor:'#0f172a',bgColor:'#f4f7fb',heroColor:'#1d4ed8'},home:{heroTitle:'Tes psikologi internal yang cepat, rapi, dan nyaman dibuka di semua perangkat.',heroText:'Masuk sebagai siswa, kerjakan tes, dan simpan progres secara otomatis. Beranda dibuat bergaya clean seperti template modern dengan hero besar, kartu ringkas, statistik, konten terstruktur, dan FAQ.',heroPills:['Teks & gambar','Jawaban bergambar','Cloud spreadsheet','Layout responsif'],stats:[{num:'100%',label:'Responsif'},{num:'4',label:'Halaman'},{num:'2',label:'Role admin'},{num:'1',label:'Spreadsheet'}],features:['Masuk sebagai siswa','Login admin terpisah','Editor soal gambar','Rekap cloud'],summaryBox:'Beranda ini dapat diubah dari panel super admin.',guide:'1. Siswa memasukkan email lalu menekan mulai.\n2. Soal dapat berisi gambar dan jawaban bergambar.\n3. Super admin dapat mengubah konten, warna, logo, dan semua elemen penting dari website.\n4. Admin biasa hanya melihat rekap hasil.',categoryTitle:'Kategori tes',categories:[{title:'Tes Kepribadian',desc:'Untuk mengenali pola sikap dan kebiasaan siswa.',count:'12 item'},{title:'Tes Minat & Bakat',desc:'Membantu melihat arah potensi dan kecenderungan belajar.',count:'8 item'},{title:'Tes Emosi',desc:'Cocok untuk pemahaman kondisi emosi dan respon.',count:'6 item'}],newsTitle:'Info / pengumuman',posts:[{title:'Pelaksanaan tes internal',body:'Gunakan email pribadi siswa agar progres tersimpan dan hasil dapat direkap ke Google Sheets.'},{title:'Mode super admin',body:'Semua konten beranda dan identitas visual bisa diubah dari halaman super admin.'}],faq:[{q:'Apakah bisa diakses dari HP?',a:'Bisa. Layout dibuat responsif agar nyaman di desktop, tablet, dan Android.'},{q:'Apakah soal bisa gambar?',a:'Bisa. Soal dan jawaban dapat berupa teks, gambar, atau kombinasi keduanya.'},{q:'Apakah hasil tersimpan ke cloud?',a:'Bisa jika endpoint Google Apps Script sudah diisi.'}],footerBox:'Konten footer dapat diedit dari super admin. Website ini siap dipakai di GitHub Pages.'}},sheetEndpoint:DEFAULT_ENDPOINT};
-    const state={page:'home',admin:null,questions:[],results:[],draftEmail:'',testIndex:0,answers:{},editingQuestionId:null,pendingImageData:null,pendingOptionImages:{},config:loadJson(STORAGE_KEYS.settings,DEFAULT_CONFIG)};
+    
+    const DEFAULT_CONFIG = {
+      branding: {
+        title: 'Alat Tes Psikologi Internal',
+        subtitle: 'SMK PGRI 2 Kediri · responsif untuk desktop, tablet, dan Android',
+        logoData: '',
+        backgroundData: '',
+        primaryColor: '#0f3a66',
+        textColor: '#0f172a',
+        bgColor: '#f4f7fb',
+        heroColor: '#1d4ed8'
+      },
+      home: {
+        heroTitle: 'Tes psikologi internal yang cepat, rapi, dan nyaman dibuka di semua perangkat.',
+        heroText: 'Masuk sebagai siswa, kerjakan tes, dan simpan progres secara otomatis. Beranda dibuat bergaya clean seperti template modern dengan hero besar, kartu ringkas, statistik, konten terstruktur, dan FAQ.',
+        heroPills: ['Teks & gambar', 'Jawaban bergambar', 'Cloud spreadsheet', 'Layout responsif'],
+        stats: [
+          { num: '100%', label: 'Responsif' },
+          { num: '4', label: 'Halaman' },
+          { num: '2', label: 'Role admin' },
+          { num: '1', label: 'Spreadsheet' }
+        ],
+        features: ['Masuk sebagai siswa', 'Login admin terpisah', 'Editor soal gambar', 'Rekap cloud'],
+        summaryBox: 'Beranda ini dapat diubah dari panel super admin.',
+        guide: '1. Siswa memasukkan email lalu menekan mulai.\n2. Soal dapat berisi gambar dan jawaban bergambar.\n3. Super admin dapat mengubah konten, warna, logo, dan semua elemen penting dari website.\n4. Admin biasa hanya melihat rekap hasil.',
+        categoryTitle: 'Kategori tes',
+        categories: [
+          { title: 'Tes Kepribadian', desc: 'Untuk mengenali pola sikap dan kebiasaan siswa.', count: '12 item' },
+          { title: 'Tes Minat & Bakat', desc: 'Membantu melihat arah potensi dan kecenderungan belajar.', count: '8 item' },
+          { title: 'Tes Emosi', desc: 'Cocok untuk pemahaman kondisi emosi dan respon.', count: '6 item' }
+        ],
+        newsTitle: 'Info / pengumuman',
+        posts: [
+          { title: 'Pelaksanaan tes internal', body: 'Gunakan email pribadi siswa agar progres tersimpan dan hasil dapat direkap ke Google Sheets.' },
+          { title: 'Mode super admin', body: 'Semua konten beranda dan identitas visual bisa diubah dari halaman super admin.' }
+        ],
+        faq: [
+          { q: 'Apakah bisa diakses dari HP?', a: 'Bisa. Layout dibuat responsif agar nyaman di desktop, tablet, dan Android.' },
+          { q: 'Apakah soal bisa gambar?', a: 'Bisa. Soal dan jawaban dapat berupa teks, gambar, atau kombinasi keduanya.' },
+          { q: 'Apakah hasil tersimpan ke cloud?', a: 'Bisa jika endpoint Google Apps Script sudah diisi.' }
+        ],
+        footerBox: 'Konten footer dapat diedit dari super admin. Website ini siap dipakai di GitHub Pages.'
+      },
+      sheetEndpoint: DEFAULT_ENDPOINT
+    };
+
+const state={page:'home',admin:null,questions:[],results:[],draftEmail:'',testIndex:0,answers:{},editingQuestionId:null,pendingImageData:null,pendingOptionImages:{},config:loadJson(STORAGE_KEYS.settings,DEFAULT_CONFIG)};
     const el=id=>document.getElementById(id);
     const esc=s=>String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
     function loadJson(key,fallback){try{return Object.assign({},fallback,JSON.parse(localStorage.getItem(key)||'null')||{});}catch{return structuredClone(fallback)}}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Alat Tes Psikologi Internal - SMK PGRI 2 Kediri</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="home">
+  <div class="bg-layer" id="bgLayer"></div>
+  <div class="bg-overlay"></div>
+
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="logo" id="logoBox"><span id="logoFallback">AT</span><img id="logoImg" class="hidden" alt="Logo sekolah"></div>
+          <div>
+            <h1 id="brandTitle">Alat Tes Psikologi Internal</h1>
+            <p id="brandSubtitle">SMK PGRI 2 Kediri · responsif untuk desktop, tablet, dan Android</p>
+          </div>
+        </div>
+        <div class="pill-row">
+          <button class="pill ghost" id="btnHome">Beranda</button>
+          <button class="pill ghost" id="btnAdminLogin">Admin</button>
+          <button class="pill primary" id="btnStudentQuick">Mulai Tes</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="pageHome" class="page active">
+        <div class="home-shell">
+          <div class="hero">
+            <div class="hero-banner">
+              <h2 id="homeHeroTitle">Tes psikologi internal yang cepat, rapi, dan nyaman dibuka di semua perangkat.</h2>
+              <p id="homeHeroText">Masuk sebagai siswa, kerjakan tes, dan simpan progres secara otomatis. Beranda dibuat lebih clean, dengan hero besar, kartu login siswa, statistik ringkas, kategori, pengumuman, dan FAQ yang bisa diedit dari super admin.</p>
+              <div class="hero-meta" id="homeHeroPills"></div>
+            </div>
+
+            <div class="student-box">
+              <div>
+                <h3>Masuk sebagai siswa</h3>
+                <p>Langkah utama ada di sini. Masukkan email pribadi lalu mulai tes.</p>
+                <div class="field">
+                  <label for="studentEmail">Email pribadi siswa</label>
+                  <input id="studentEmail" class="input" type="email" placeholder="contoh: nama@domain.com" autocomplete="email" />
+                </div>
+              </div>
+              <div>
+                <button class="btn primary" id="btnStartStudent">Lanjut ke Tes</button>
+                <div class="row" style="margin-top:10px">
+                  <button class="btn outline" id="btnResumeDraft">Lanjutkan Draft</button>
+                </div>
+                <div class="status-strip" style="margin-top:12px">
+                  <span class="status-mini">Soal teks & gambar</span>
+                  <span class="status-mini">Jawaban bergambar</span>
+                  <span class="status-mini">Cloud spreadsheet</span>
+                </div>
+                <p class="small" style="margin-top:10px">Menu admin ada di pojok kanan atas. Siswa tetap di halaman ini sampai menekan mulai.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats" id="homeStats"></div>
+
+          <div class="grid cols-2">
+            <div class="card accordion" style="padding:0">
+              <details open>
+                <summary>Petunjuk penggunaan</summary>
+                <div class="body" id="homeGuide"></div>
+              </details>
+              <details>
+                <summary>Status aplikasi</summary>
+                <div class="body" id="homeStatus">Memuat status...</div>
+              </details>
+            </div>
+            <div class="card">
+              <div class="section-title">
+                <h3>Fitur utama</h3>
+              </div>
+              <div class="navline" id="homeFeatureChips"></div>
+              <div class="help-box" style="margin-top:12px" id="homeSummaryBox">Beranda ini dapat diubah dari panel super admin.</div>
+            </div>
+          </div>
+
+          <div class="content-grid">
+            <div>
+              <div class="section-title"><h3 id="homeCategoryTitle">Kategori tes</h3></div>
+              <div class="category-grid" id="homeCategories"></div>
+            </div>
+            <div>
+              <div class="section-title"><h3 id="homeNewsTitle">Info / pengumuman</h3></div>
+              <div class="post-list" id="homePosts"></div>
+            </div>
+          </div>
+
+          <div class="grid cols-2">
+            <div class="card">
+              <div class="section-title"><h3>FAQ</h3></div>
+              <div class="accordion" id="homeFaq"></div>
+            </div>
+            <div class="card">
+              <div class="section-title"><h3>Footer ringkas</h3></div>
+              <div class="help-box" id="homeFooterBox">Konten footer dapat diedit dari super admin.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pageTest" class="page">
+        <div class="card">
+          <div class="section-title">
+            <div>
+              <h3>Tes siswa</h3>
+              <small id="testEmailLabel">Email: -</small>
+            </div>
+            <div class="row" style="justify-content:flex-end;flex:0 0 auto">
+              <button class="btn outline small" id="btnSaveDraft">Simpan Progres</button>
+              <button class="btn gray small" id="btnBackHomeFromTest">Kembali</button>
+            </div>
+          </div>
+          <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+          <div id="questionHost"></div>
+          <div class="row" style="margin-top:16px">
+            <button class="btn outline" id="btnPrevQ">Sebelumnya</button>
+            <button class="btn blue" id="btnNextQ">Selanjutnya</button>
+            <button class="btn success" id="btnFinishTest">Selesai & Kirim</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <header>
+        <h3>Login Admin</h3>
+        <button class="btn outline small" id="btnCloseLogin">Tutup</button>
+      </header>
+      <div class="field">
+        <label for="adminEmail">Email</label>
+        <input id="adminEmail" class="input" type="text" placeholder="Email admin">
+      </div>
+      <div class="field">
+        <label for="adminPassword">Password</label>
+        <input id="adminPassword" class="input" type="password" placeholder="Password">
+      </div>
+      <div class="row">
+        <button class="btn primary" id="btnDoLogin">Masuk</button>
+      </div>
+      <p class="footer-note" style="margin-top:12px">Setelah login, kamu akan diarahkan ke halaman admin.</p>
+    </div>
+  </div>
+
+  <script src="site.js" defer></script>
+</body>
+</html>

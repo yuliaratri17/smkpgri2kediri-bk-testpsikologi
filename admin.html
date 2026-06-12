@@ -254,5 +254,73 @@
   </div>
 
   <script src="site.js" defer></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const loginOverlay = document.getElementById("loginOverlay");
+
+  function hideLogin() {
+    if (loginOverlay) {
+      loginOverlay.style.display = "none";
+      loginOverlay.style.pointerEvents = "none";
+      document.body.style.overflow = "auto";
+    }
+  }
+
+  function showLogin() {
+    if (loginOverlay) {
+      loginOverlay.style.display = "flex";
+      loginOverlay.style.pointerEvents = "auto";
+    }
+  }
+
+  // tombol login
+  document.getElementById("btnDoLogin").onclick = () => {
+    const email = document.getElementById("adminEmail").value;
+    const pass = document.getElementById("adminPassword").value;
+
+    if (
+      (email === "admin" && pass === "bkgrida2026") ||
+      (email === "bksmkpgri2@gmail.com" && pass === "rayarvian2")
+    ) {
+      localStorage.setItem("adminLogin", "true");
+      localStorage.setItem("role", email === "admin" ? "admin" : "super");
+
+      hideLogin();
+      enableUI();
+      alert("Login berhasil");
+    } else {
+      alert("Login salah");
+    }
+  };
+
+  // logout
+  document.getElementById("btnLogoutAdmin").onclick = logout;
+  document.getElementById("btnBackHomeFromAdmin").onclick = logout;
+
+  function logout() {
+    localStorage.removeItem("adminLogin");
+    localStorage.removeItem("role");
+    showLogin();
+  }
+
+  function enableUI() {
+    document.querySelectorAll("button, input, textarea").forEach(el => {
+      el.disabled = false;
+      el.style.pointerEvents = "auto";
+    });
+  }
+
+  // pertama load
+  if (localStorage.getItem("adminLogin") === "true") {
+    hideLogin();
+    enableUI();
+  } else {
+    showLogin();
+  }
+
+  // tombol close login
+  document.getElementById("btnCloseLogin").onclick = showLogin;
+});
+</script>
 </body>
 </html>

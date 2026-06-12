@@ -1,4 +1,10 @@
-
+// ANTI OVERLAY BUG GLOBAL
+window.addEventListener("load", () => {
+  const overlay = document.getElementById("loginOverlay");
+  if (overlay && localStorage.getItem("adminLogin") === "true") {
+    overlay.style.display = "none";
+  }
+});
 (function(){
   const APP = {
     data: {

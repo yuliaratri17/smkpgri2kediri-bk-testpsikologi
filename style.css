@@ -270,3 +270,23 @@ tr:last-child td{border-bottom:none}
 .linkchip{
   display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);padding:8px 12px;border-radius:999px
 }
+/* FIX overlay bug */
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-overlay.hidden {
+  display: none !important;
+}
+
+/* pastikan admin bisa diklik */
+#adminPanel {
+  position: relative;
+  z-index: 1;
+}

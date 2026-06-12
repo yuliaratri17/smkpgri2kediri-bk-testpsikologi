@@ -18,7 +18,7 @@ const AUTH = {
 const DEFAULT_SITE = {
   branding: {
     title: 'Alat Tes Psikologi Internal',
-    subtitle: 'SMK PGRI 2 Kediri · responsif untuk desktop, tablet, dan Android',
+    subtitle: 'SMK PGRI 2 Kediri ',
     logoData: '',
     backgroundData: '',
     primaryColor: '#1d4ed8',
@@ -35,8 +35,6 @@ const DEFAULT_SITE = {
     guideItems: [
       'Siswa memasukkan email lalu menekan mulai.',
       'Soal dapat berisi gambar dan jawaban bergambar.',
-      'Super admin dapat mengubah konten, warna, logo, dan seluruh isi halaman beranda.',
-      'Admin biasa dapat melihat rekap hasil dan spreadsheet.',
     ],
     categories: [
       { title: 'Tes Kepribadian', desc: 'Untuk mengenali pola sikap dan kebiasaan siswa.', count: '12 item' },
@@ -45,7 +43,6 @@ const DEFAULT_SITE = {
     ],
     announcements: [
       { title: 'Pelaksanaan tes internal', body: 'Gunakan email pribadi siswa agar progres tersimpan dan hasil dapat direkap ke Google Sheets.' },
-      { title: 'Akses admin', body: 'Admin dan super admin dapat membuka hasil rekap dan spreadsheet dari halaman masing-masing.' },
     ],
     faqs: [
       { q: 'Apakah bisa diakses dari HP?', a: 'Bisa. Layout dibuat responsif agar nyaman di desktop, tablet, dan Android.' },
@@ -294,7 +291,6 @@ function renderHome() {
             <h3>Ringkasan fitur</h3>
           </div>
           <div class="help-box">
-            Halaman ini sengaja dibuat ringkas. Elemen yang sebelumnya terlalu ramai sudah dihapus agar lebih clean.
           </div>
         </div>
       </div>
@@ -679,7 +675,6 @@ function renderSuper() {
                 <button class="btn outline" data-action="open-sheet">Buka Spreadsheet</button>
                 <button class="btn outline" data-action="test-endpoint">Tes Endpoint</button>
               </div>
-              <p class="footer-note" style="margin-top:12px">Admin biasa juga bisa membuka hasil rekap dari halaman admin.</p>
             </div>
             <div class="card">
               <div class="section-title"><h3>Rekap cepat</h3></div>
@@ -704,7 +699,6 @@ function renderSuper() {
       <div class="card">
         <div class="section-title"><h3>Info kontrol</h3></div>
         <div class="help-box">
-          <div>Super admin bisa mengubah branding, konten beranda, daftar kategori, FAQ, dan seluruh soal.</div>
           <hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0">
           <div><b>Halaman 1</b> = Beranda</div>
           <div><b>Halaman 2</b> = User / tes</div>
@@ -782,7 +776,7 @@ function adminLoginMarkup(roleHint) {
       <div class="page-hero">
         <div class="hero-banner">
           <h2 class="title">Login ${roleHint === 'superadmin' ? 'super admin' : 'admin'}</h2>
-          <p class="subtitle">Masuk untuk melihat rekap hasil dan spreadsheet. Super admin juga bisa mengedit seluruh konten situs.</p>
+          <p class="subtitle">Masuk untuk melihat rekap hasil dan spreadsheet.</p>
         </div>
         <div class="card login-card">
           <div class="field">
